@@ -50,14 +50,6 @@ class gamma{
       this.find_byFTOF,
       this.find_byMOM
     ]
-
-    def field_setting = "inbending"
-    // cut lvl meanings: 0 loose, 1 med, 2 tight
-    def gam_cut_strictness_lvl=["pcal_fiducial_cut_lvl":1]
-
-    this.gamma_candidate.setGammaCutStrictness(gam_cut_strictness_lvl)
-    this.gamma_candidate.setGammaCutParameters(field_setting)
-
   }
 
 

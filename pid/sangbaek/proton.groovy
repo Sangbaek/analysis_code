@@ -55,16 +55,8 @@ class proton{
     //   this.find_byMOM
     // ]
 
-    // def field_setting = "inbending"
-    // cut lvl meanings: 0 loose, 1 med, 2 tight
-    // def pro_cut_strictness_lvl=[
-    //            "dcr1_cut_lvl":1,
-    //            "dcr2_cut_lvl":1,
-    //            "dcr3_cut_lvl":1,
-    // ]
-
-    // this.proton_candidate.setProtonCutStrictness(pro_cut_strictness_lvl)
-    // this.proton_candidate.setProtonCutParameters("inbending")
+    def field_setting = "inbending"
+    this.proton_candidate.setProtonCutParameters(field_setting)
 
   }
 

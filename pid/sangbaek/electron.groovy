@@ -53,9 +53,9 @@ class electron{
       this.electron_candidate.passElectronVertexCut,
       this.electron_candidate.passElectronPCALFiducialCut,
       this.electron_candidate.passElectronEIEOCut,
-      this.electron_candidate.passElectronDCR1_updated,
-      this.electron_candidate.passElectronDCR2_updated,
-      this.electron_candidate.passElectronDCR3_updated,
+      this.electron_candidate.passElectronDCR1,
+      this.electron_candidate.passElectronDCR2,
+      this.electron_candidate.passElectronDCR3,
       this.electron_candidate.passElectronAntiPionCut
     ]
 
@@ -69,15 +69,6 @@ class electron{
     def el_cut_strictness_lvl=["ecal_cut_lvl":1,
                "nphe_cut_lvl":1,
                "vz_cut_lvl":1,
-               "min_u_cut_lvl":1,
-               "min_v_cut_lvl":1,
-               "min_w_cut_lvl":1,
-               "max_u_cut_lvl":1,
-               "max_v_cut_lvl":1,
-               "max_w_cut_lvl":1,
-               "dcr1_cut_lvl":1,
-               "dcr2_cut_lvl":1,
-               "dcr3_cut_lvl":1,
                "anti_pion_cut_lvl":1
     ]
     this.electron_candidate.setElectronCutStrictness(el_cut_strictness_lvl)
