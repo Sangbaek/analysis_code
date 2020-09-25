@@ -24,6 +24,7 @@ class dvcs_EB{
 
   // invaraiant mass
   def h_inv_mass_gg = {new H1F("$it", "$it", 1000, 0, 0.2)}
+  def h_inv_mass_gg_gam_energy = {new H2F("$it","$it", 32,0,8, 1000,0,0.2)}
 
   // angle between planes
   def h_angle = {new H1F("$it", "$it", 1900, -5 ,185)}
@@ -62,6 +63,7 @@ class dvcs_EB{
 
   // count total events collected
   def h_events = {new H1F("$it","$it",12, 0,12)}
+  def h_second_photons = {new H2F("$it","$it", 32,0,8, 6,0,6)}
 
   // sector dependence of kinematic variables 
   def h_W = {new H1F("$it","$it",100,0,10)}
@@ -283,15 +285,15 @@ class dvcs_EB{
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 
           //excl cuts
-          hists.computeIfAbsent("/excl/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
-          hists.computeIfAbsent("/excl/missing_energy", h_mm2).fill(VMISS.e())
-          hists.computeIfAbsent("/excl/missing_mass_epg", h_mm2).fill(VMISS.mass2())
-          hists.computeIfAbsent("/excl/missing_mass_eg", h_mm2).fill(VmissP.mass2())
-          hists.computeIfAbsent("/excl/missing_mass_ep", h_mm2).fill(VmissG.mass2())
-          hists.computeIfAbsent("/excl/missing_pt", h_mm2).fill(Math.sqrt(VMISS.px()*VMISS.px()+VMISS.py()*VMISS.py()))
-          hists.computeIfAbsent("/excl/recon_gam_cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),VmissG.vect()))
-          hists.computeIfAbsent("/excl/coplanarity", h_angle).fill(KinTool.Vangle(Vhad2,Vhadr))
-          hists.computeIfAbsent("/excl/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
+          hists.computeIfAbsent("/excl/cuts/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
+          hists.computeIfAbsent("/excl/cuts/missing_energy", h_mm2).fill(VMISS.e())
+          hists.computeIfAbsent("/excl/cuts/missing_mass_epg", h_mm2).fill(VMISS.mass2())
+          hists.computeIfAbsent("/excl/cuts/missing_mass_eg", h_mm2).fill(VmissP.mass2())
+          hists.computeIfAbsent("/excl/cuts/missing_mass_ep", h_mm2).fill(VmissG.mass2())
+          hists.computeIfAbsent("/excl/cuts/missing_pt", h_mm2).fill(Math.sqrt(VMISS.px()*VMISS.px()+VMISS.py()*VMISS.py()))
+          hists.computeIfAbsent("/excl/cuts/recon_gam_cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),VmissG.vect()))
+          hists.computeIfAbsent("/excl/cuts/coplanarity", h_angle).fill(KinTool.Vangle(Vhad2,Vhadr))
+          hists.computeIfAbsent("/excl/cuts/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
 
           if (KinTool.Vangle(gam.vect(),ele.vect())>4){
             hists.computeIfAbsent("/excl/cuts/cone_angle/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
@@ -392,7 +394,7 @@ class dvcs_EB{
           if (DVCS.ExclCuts(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
-            
+
             //calc tcol tmin
             def E = 10.6
             def tmin = M*M*xB*xB/(1-xB+xB*M*M/Q2)
@@ -486,7 +488,7 @@ class dvcs_EB{
             }
             else if (pro_status<4000 && pro_status>2000){
               hists.computeIfAbsent("/events/events", h_events).fill(6.5)
-                
+
               hists.computeIfAbsent("/dvcs/prot_polar_FD", h_polar_rate).fill(Math.toDegrees(pro.theta()))
               hists.computeIfAbsent("/dvcs/prot_azimuth_FD", h_azimuth_rate).fill(pro_phi)
             }
@@ -497,7 +499,14 @@ class dvcs_EB{
               def ind_gam2 = (0..<event.npart).findAll{event.pid[it]==2212}.max{ind->
                 if (ind!=dsets.pindex[2]) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
               def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[ind_gam2]})
-              hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg", h_inv_mass_gg).fill((gam + gam2).mass())
+              def pi0 = gam+gam2
+              hists.computeIfAbsent("/dvcs/number_of_photons_gam1_energy", h_second_photons).fill(gam.e(), number_of_photons)
+              hists.computeIfAbsent("/dvcs/number_of_photons_gam2_energy", h_second_photons).fill(gam2.e(), number_of_photons)              
+              hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg", h_inv_mass_gg).fill(pi0.mass())
+              hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam1_energy", h_inv_mass_gg_gam_energy).fill(gam.e(), pi0.mass())
+              hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam2_energy", h_inv_mass_gg_gam_energy).fill(gam2.e(), pi0.mass())
+              hists.computeIfAbsent("/dvcs/pi0/cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
+              hists.computeIfAbsent("/dvcs/pi0/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
             }
 
             def xBbin2 = xB_bin(xB)
