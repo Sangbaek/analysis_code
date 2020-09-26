@@ -282,15 +282,15 @@ class dvcs_gen{
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 
           //excl cuts
-          hists.computeIfAbsent("/excl/cuts/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
-          hists.computeIfAbsent("/excl/cuts/missing_energy", h_mm2).fill(VMISS.e())
-          hists.computeIfAbsent("/excl/cuts/missing_mass_epg", h_mm2).fill(VMISS.mass2())
-          hists.computeIfAbsent("/excl/cuts/missing_mass_eg", h_mm2).fill(VmissP.mass2())
-          hists.computeIfAbsent("/excl/cuts/missing_mass_ep", h_mm2).fill(VmissG.mass2())
-          hists.computeIfAbsent("/excl/cuts/missing_pt", h_mm2).fill(Math.sqrt(VMISS.px()*VMISS.px()+VMISS.py()*VMISS.py()))
-          hists.computeIfAbsent("/excl/cuts/recon_gam_cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),VmissG.vect()))
-          hists.computeIfAbsent("/excl/cuts/coplanarity", h_angle).fill(KinTool.Vangle(Vhad2,Vhadr))
-          hists.computeIfAbsent("/excl/cuts/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
+          hists.computeIfAbsent("/excl/cuts/none/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
+          hists.computeIfAbsent("/excl/cuts/none/missing_energy", h_mm2).fill(VMISS.e())
+          hists.computeIfAbsent("/excl/cuts/none/missing_mass_epg", h_mm2).fill(VMISS.mass2())
+          hists.computeIfAbsent("/excl/cuts/none/missing_mass_eg", h_mm2).fill(VmissP.mass2())
+          hists.computeIfAbsent("/excl/cuts/none/missing_mass_ep", h_mm2).fill(VmissG.mass2())
+          hists.computeIfAbsent("/excl/cuts/none/missing_pt", h_mm2).fill(Math.sqrt(VMISS.px()*VMISS.px()+VMISS.py()*VMISS.py()))
+          hists.computeIfAbsent("/excl/cuts/none/recon_gam_cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),VmissG.vect()))
+          hists.computeIfAbsent("/excl/cuts/none/coplanarity", h_angle).fill(KinTool.Vangle(Vhad2,Vhadr))
+          hists.computeIfAbsent("/excl/cuts/none/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
 
           if (KinTool.Vangle(gam.vect(),ele.vect())>4){
             hists.computeIfAbsent("/excl/cuts/cone_angle/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
