@@ -29,7 +29,7 @@ class dvcs_gen{
   // invaraiant mass
   def h_inv_mass_gg = {new H1F("$it", "$it", 1000, 0, 0.2)}
   def h_inv_mass_gg_gam_energy = {new H2F("$it","$it", 32,0,8, 1000,0,0.2)}
-  def h_me_gam_energy = {new H2F("$it", "$it", 32, 0, 8, 100, -0.1, 0.1)}
+  def h_me_gam_energy = {new H2F("$it", "$it", 32, 0, 8, 100, -1, 3)}
 
   // angle between planes
   def h_angle = {new H1F("$it", "$it", 1900, -5 ,185)}
@@ -393,7 +393,7 @@ class dvcs_gen{
           if (DVCS.ExclCuts(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
-            
+
             //calc tcol tmin
             def E = 10.6
             def tmin = M*M*xB*xB/(1-xB+xB*M*M/Q2)
@@ -401,6 +401,10 @@ class dvcs_gen{
             // fill t dependence on 2 fold binning (xB, Q2)
             int xBbin = 1 + 2 * Math.floor(xB/0.2)
             int Q2bin = 1 + 2 * Math.floor(Q2/2)
+            def xBbin2 = xB_bin(xB)
+            def Q2bin2 = Q2_bin(Q2)
+            def tbin = t_bin(t2)
+            def helicity = event.helicity
 
             //electron pid
             hists.computeIfAbsent("/excl/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.mc_vz[ele_ind])
@@ -504,12 +508,13 @@ class dvcs_gen{
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam2_energy", h_inv_mass_gg_gam_energy).fill(gam2.e(), pi0.mass())
               hists.computeIfAbsent("/dvcs/pi0/pi0_cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
               hists.computeIfAbsent("/dvcs/pi0/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
+              if (pi0.mass<0.1 && pi0.mass>0.08)  {
+                def costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
+                def t_pi0 = Q2 + 2*nu*pi0.e() - 2*Math.sqrt(nu*nu+Q2)*costheta2
+                def tbin_pi0 = t_bin(t_pi0)
+                hists.computeIfAbsent("/dvcs/pi0/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
+              }
             }
-
-            def xBbin2 = xB_bin(xB)
-            def Q2bin2 = Q2_bin(Q2)
-            def tbin = t_bin(t2)
-            def helicity = event.helicity
 
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
