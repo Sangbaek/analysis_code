@@ -510,22 +510,41 @@ class dvcs{
             def number_of_photons = gamma_selector.applyCuts_Stefan(event).size()
             hists.computeIfAbsent("/dvcs/number_of_photons", h_events).fill(number_of_photons)
             if (number_of_photons>1){
-              def ind_gam2 = gamma_selector.applyCuts_Stefan(event).max{ind->
-                if (ind!=dsets.pindex[2]) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
-              def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[ind_gam2]})
+              def gam2_ind = gamma_selector.applyCuts_Stefan(event).max{ind->
+                if (ind!=gam_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
+              def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam2_ind]})
               def pi0 = gam+gam2
-              hists.computeIfAbsent("/dvcs/number_of_photons_gam1_energy", h_second_photons).fill(gam.e(), number_of_photons)
-              hists.computeIfAbsent("/dvcs/number_of_photons_gam2_energy", h_second_photons).fill(gam2.e(), number_of_photons)              
+              hists.computeIfAbsent("/dvcs/pi0/number_of_photons_gam1_energy", h_second_photons).fill(gam.e(), number_of_photons)
+              hists.computeIfAbsent("/dvcs/pi0/number_of_photons_gam2_energy", h_second_photons).fill(gam2.e(), number_of_photons)              
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg", h_inv_mass_gg).fill(pi0.mass())
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam1_energy", h_inv_mass_gg_gam_energy).fill(gam.e(), pi0.mass())
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam2_energy", h_inv_mass_gg_gam_energy).fill(gam2.e(), pi0.mass())
               hists.computeIfAbsent("/dvcs/pi0/pi0_cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
               hists.computeIfAbsent("/dvcs/pi0/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
-              if (pi0.mass<0.1 && pi0.mass>0.08)  {
+              if (pi0.mass<0.2 && pi0.mass>0.08)  {
                 def costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
                 def t_pi0 = Q2 + 2*nu*pi0.e() - 2*Math.sqrt(nu*nu+Q2)*costheta2
                 def tbin_pi0 = t_bin(t_pi0)
                 hists.computeIfAbsent("/dvcs/pi0/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
+              }
+              if (number_of_photons>2){
+                def gam3_ind = gamma_selector.applyCuts_Stefan(event).max{ind->
+                  if (ind!=gam_ind && ind!=gam2_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
+                def gam3 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam3_ind]})
+                pi0 = gam+gam3
+                hists.computeIfAbsent("/dvcs/pi0/gam3/number_of_photons_gam1_energy", h_second_photons).fill(gam.e(), number_of_photons)
+                hists.computeIfAbsent("/dvcs/pi0/gam3/number_of_photons_gam2_energy", h_second_photons).fill(gam2.e(), number_of_photons)              
+                hists.computeIfAbsent("/dvcs/pi0/gam3/h_inv_mass_gg", h_inv_mass_gg).fill(pi0.mass())
+                hists.computeIfAbsent("/dvcs/pi0/gam3/h_inv_mass_gg_gam1_energy", h_inv_mass_gg_gam_energy).fill(gam.e(), pi0.mass())
+                hists.computeIfAbsent("/dvcs/pi0/gam3/h_inv_mass_gg_gam2_energy", h_inv_mass_gg_gam_energy).fill(gam2.e(), pi0.mass())
+                hists.computeIfAbsent("/dvcs/pi0/gam3/pi0_cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
+                hists.computeIfAbsent("/dvcs/pi0/gam3/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
+                if (pi0.mass<0.2 && pi0.mass>0.08)  {
+                  costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
+                  t_pi0 = Q2 + 2*nu*pi0.e() - 2*Math.sqrt(nu*nu+Q2)*costheta2
+                  tbin_pi0 = t_bin(t_pi0)
+                  hists.computeIfAbsent("/dvcs/pi0/gam3/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
+                }
               }
             }
 
