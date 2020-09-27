@@ -460,8 +460,8 @@ class dvcs{
 
             hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(gam.e(), nu + t/2/M)
             hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(gam.e(), nu + t2/2/M)
-            hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(gam.e(), nu + t/2/M)
-            hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(gam.e(), nu + t2/2/M)
+            hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(gam.e(), nu + t/2/M - gam.e())
+            hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(gam.e(), nu + t2/2/M - gam.e())
 
             hists.computeIfAbsent("/dvcs/corr/tmin", h_Q2_xB).fill(xB,Q2,tmin)
             hists.computeIfAbsent("/dvcs/corr/tcol", h_Q2_xB).fill(xB,Q2,tcol)
@@ -538,8 +538,8 @@ class dvcs{
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_t", h_t).fill(t_pi0)
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(pi0.e(), nu + t/2/M)
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(pi0.e(), nu + t_pi0/2/M)
-                hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M)
-                hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M)
+                hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
+                hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
                 hists.computeIfAbsent("/dvcs/pi0/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
               }
               if (number_of_photons>2){
@@ -561,8 +561,8 @@ class dvcs{
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_t", h_t).fill(t_pi0)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(pi0.e(), nu + t/2/M)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(pi0.e(), nu + t_pi0/2/M)
-                  hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M)
-                  hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M)
+                  hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
+                  hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
                   hists.computeIfAbsent("/dvcs/pi0/gam3/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
                 }
               }
