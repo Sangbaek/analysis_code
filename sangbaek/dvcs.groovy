@@ -29,6 +29,7 @@ class dvcs{
   // invaraiant mass
   def h_inv_mass_gg = {new H1F("$it", "$it", 1000, 0, 0.2)}
   def h_inv_mass_gg_gam_energy = {new H2F("$it","$it", 32,0,8, 1000,0,0.2)}
+  def h_me_gam_energy = {new H2F("$it", "$it", 32, 0, 8, 100, -0.1, 0.1)}
 
   // angle between planes
   def h_angle = {new H1F("$it", "$it", 1900, -5 ,185)}
@@ -301,6 +302,7 @@ class dvcs{
           hists.computeIfAbsent("/excl/cuts/none/recon_gam_cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),VmissG.vect()))
           hists.computeIfAbsent("/excl/cuts/none/coplanarity", h_angle).fill(KinTool.Vangle(Vhad2,Vhadr))
           hists.computeIfAbsent("/excl/cuts/none/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
+          hists.computeIfAbsent("/excl/cuts/none/h_me_gam_energy", h_me_gam_energy).fill(gam.e(), VMISS.e())
 
           if (KinTool.Vangle(gam.vect(),ele.vect())>4){
             hists.computeIfAbsent("/excl/cuts/cone_angle/cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),ele.vect()))
@@ -445,6 +447,7 @@ class dvcs{
             hists.computeIfAbsent("/excl/cuts/all/recon_gam_cone_angle", h_angle).fill(KinTool.Vangle(gam.vect(),VmissG.vect()))
             hists.computeIfAbsent("/excl/cuts/all/coplanarity", h_angle).fill(KinTool.Vangle(Vhad2,Vhadr))
             hists.computeIfAbsent("/excl/cuts/all/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
+            hists.computeIfAbsent("/excl/cuts/all/h_me_gam_energy", h_me_gam_energy).fill(gam.e(), VMISS.e())
 
             hists.computeIfAbsent("/dvcs/corr/tmin", h_Q2_xB).fill(xB,Q2,tmin)
             hists.computeIfAbsent("/dvcs/corr/tcol", h_Q2_xB).fill(xB,Q2,tcol)
@@ -512,7 +515,7 @@ class dvcs{
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg", h_inv_mass_gg).fill(pi0.mass())
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam1_energy", h_inv_mass_gg_gam_energy).fill(gam.e(), pi0.mass())
               hists.computeIfAbsent("/dvcs/pi0/h_inv_mass_gg_gam2_energy", h_inv_mass_gg_gam_energy).fill(gam2.e(), pi0.mass())
-              hists.computeIfAbsent("/dvcs/pi0/cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
+              hists.computeIfAbsent("/dvcs/pi0/pi0_cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
               hists.computeIfAbsent("/dvcs/pi0/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
             }
 
