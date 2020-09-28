@@ -286,7 +286,7 @@ class dvcs_EB{
           hists.computeIfAbsent("/epg/pid/gam/theta_mom_"+gam_string, h_theta_mom).fill(gam.p(), Math.toDegrees(gam.theta()))
         }
 
-        if (DVCS.KineCuts(xB, Q2, W, ele, gam)){
+        if (DVCS.KineCuts(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>1)){
 
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 
@@ -453,7 +453,7 @@ class dvcs_EB{
 
             hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(gam.e(), nu + t/2/M)
             hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(gam.e(), nu + t2/2/M)
-            hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(gam.e(), nu + t/2/M -gam.e())
+            hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(gam.e(), nu + t/2/M - gam.e())
             hists.computeIfAbsent("/dvcs/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(gam.e(), nu + t2/2/M - gam.e())
 
             hists.computeIfAbsent("/dvcs/corr/tmin", h_Q2_xB).fill(xB,Q2,tmin)
@@ -513,7 +513,7 @@ class dvcs_EB{
             def number_of_photons = (0..<event.npart).findAll{event.pid[it]==22}.size()
             hists.computeIfAbsent("/dvcs/number_of_photons", h_events).fill(number_of_photons)
             if (number_of_photons>1){
-              def gam2_ind = (0..<event.npart).findAll{event.pid[it]==2212}.max{ind->
+              def gam2_ind = (0..<event.npart).findAll{event.pid[it]==22}.max{ind->
                 if (ind!=gam_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
               def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam2_ind]})
               def pi0 = gam+gam2
@@ -533,10 +533,10 @@ class dvcs_EB{
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(pi0.e(), nu + t_pi0/2/M)
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
-                hists.computeIfAbsent("/dvcs/pi0/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
+                hists.computeIfAbsent("/dvcs/pi0/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
               }
               else if (number_of_photons>2){
-                def gam3_ind = (0..<event.npart).findAll{event.pid[it]==2212}.max{ind->
+                def gam3_ind = (0..<event.npart).findAll{event.pid[it]==22}.max{ind->
                   if (ind!=gam_ind && ind!=gam2_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
                 def gam3 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam3_ind]})
                 pi0 = gam+gam3

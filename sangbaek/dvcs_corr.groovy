@@ -8,7 +8,6 @@ import exclusive.sangbaek.DVCS
 import utils.KinTool
 import event.Event
 import event.EventConverter
-import pid.electron.ElectronSelector
 import pid.sangbaek.electron
 import pid.sangbaek.proton
 import pid.sangbaek.gamma
@@ -300,7 +299,7 @@ class dvcs_corr{
           hists.computeIfAbsent("/epg/pid/gam/theta_mom_"+gam_string, h_theta_mom).fill(gam.p(), Math.toDegrees(gam.theta()))
         }
 
-        if (DVCS.KineCuts(xB, Q2, W, ele, gam)){
+        if (DVCS.KineCuts(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>1)){
 
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 
