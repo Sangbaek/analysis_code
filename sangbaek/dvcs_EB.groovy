@@ -286,7 +286,7 @@ class dvcs_EB{
           hists.computeIfAbsent("/epg/pid/gam/theta_mom_"+gam_string, h_theta_mom).fill(gam.p(), Math.toDegrees(gam.theta()))
         }
 
-        if (DVCS.KineCuts(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>1)){
+        if (DVCS.KineCuts(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>0.4)){
 
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 
