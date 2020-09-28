@@ -47,7 +47,6 @@ class gamma{
     ]
 
     this.gammaCutStrategies_Custom = [
-      this.find_byFTOF,
       this.find_byMOM
     ]
   }
@@ -77,6 +76,6 @@ class gamma{
     def vz = event.vz[index]
     def theta = Math.toDegrees(lv.theta())
     def phi = Math.toDegrees(lv.phi())
-    return p > 1.5 && theta>17*(1-p/7)
+    return p > 0.4
   }
 }

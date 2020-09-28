@@ -28,8 +28,8 @@ class dvcs_corr{
 
   // invaraiant mass
   def h_inv_mass_gg = {new H1F("$it", "$it", 1000, 0, 0.2)}
-  def h_inv_mass_gg_gam_energy = {new H2F("$it","$it", 32,0,8, 1000,0,0.2)}
-  def h_me_gam_energy = {new H2F("$it", "$it", 32, 0, 8, 100, -1, 3)}
+  def h_inv_mass_gg_gam_energy = {new H2F("$it","$it", 100,0,10, 1000,0,0.2)}
+  def h_me_gam_energy = {new H2F("$it", "$it", 100, 0, 10, 100, -1, 3)}
 
   // angle between planes
   def h_angle = {new H1F("$it", "$it", 1900, -5 ,185)}
@@ -524,10 +524,10 @@ class dvcs_corr{
               hists.computeIfAbsent("/dvcs/prot_azimuth_FD", h_azimuth_rate).fill(pro_phi)
             }
 
-            def number_of_photons = gamma_selector.applyCuts_Stefan(event).size()
+            def number_of_photons = gamma_selector.applyCuts_Custom(event).size()
             hists.computeIfAbsent("/dvcs/number_of_photons", h_events).fill(number_of_photons)
             if (number_of_photons>1){
-              def gam2_ind = gamma_selector.applyCuts_Stefan(event).max{ind->
+              def gam2_ind = gamma_selector.applyCuts_Custom(event).max{ind->
                 if (ind!=gam_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
               def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam2_ind]})
               def pi0 = gam+gam2
@@ -569,8 +569,8 @@ class dvcs_corr{
                 hists.computeIfAbsent("/dvcs/pi0/after_corr/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
                 hists.computeIfAbsent("/dvcs/pi0/after_corr/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
               }
-              if (number_of_photons>2){
-                def gam3_ind = gamma_selector.applyCuts_Stefan(event).max{ind->
+              else if (number_of_photons>2){
+                def gam3_ind = gamma_selector.applyCuts_Custom(event).max{ind->
                   if (ind!=gam_ind && ind!=gam2_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
                 def gam3 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam3_ind]})
                 pi0 = gam+gam3
@@ -595,24 +595,22 @@ class dvcs_corr{
               }
             }
 
-            if (number_of_photons == 1){
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
-              
-              if (pro_status>=4000){
-                hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-                hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
-              }
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+            
+            if (pro_status>=4000){
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+            }
 
-              if (gam_status<2000){
-                hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-                hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
-              }
+            if (gam_status<2000){
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+            }
 
-              if (pro_status>=4000 && gam_status<2000){
-                hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-                hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
-              }
+            if (pro_status>=4000 && gam_status<2000){
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
             }
           } // exclusivity cuts ended
         }//kine cuts ended
