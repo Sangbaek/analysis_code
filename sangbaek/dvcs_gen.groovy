@@ -454,8 +454,8 @@ class dvcs_gen{
             hists.computeIfAbsent("/dvcs/binning/h_Q2_xB", h_Q2_xB).fill(xB,Q2)
             hists.computeIfAbsent("/dvcs/binning/h_t_trento", h_t_trento).fill(TrentoAng, t)
             hists.computeIfAbsent("/dvcs/binning/h_Q2_t", h_Q2_t).fill(t,Q2)
-            hists.computeIfAbsent("/dvcs/binning/h_Q2_xB_logarithmic", h_Q2_xB_logarithmic).fill(Math.log10(xB), Math.log10(Q2), 1/Q2/xB)
-            hists.computeIfAbsent("/dvcs/binning/h_t_trento_logarithmic", h_t_trento_logarithmic).fill(TrentoAng, Math.log10(t2), 1/t2)
+            hists.computeIfAbsent("/dvcs/binning/h_Q2_xB_logarithmic", h_Q2_xB_logarithmic).fill(Math.log10(xB), Math.log10(Q2))
+            hists.computeIfAbsent("/dvcs/binning/h_t_trento_logarithmic", h_t_trento_logarithmic).fill(TrentoAng, Math.log10(t2))
 
             hists.computeIfAbsent("/dvcs/binning/h_t_xB", h_t_xB).fill(xB,t)
             hists.computeIfAbsent("/dvcs/binning/h_Q2_theta", h_Q2_theta).fill(Math.toDegrees(ele.theta()),Q2);
