@@ -595,24 +595,24 @@ class dvcs{
             def xBQ2tbin = xBQ2tbin(xB, Q2, t2)
 
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             
             if (pro_status>=4000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
 
             if (gam_status<2000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
 
             if (pro_status>=4000 && gam_status<2000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
           } // exclusivity cuts ended

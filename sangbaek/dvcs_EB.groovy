@@ -46,7 +46,7 @@ class dvcs_EB{
 
   def h_Q2_xB_logarithmic = {new H2F("$it", "$it", 30, -1.31, -0.096, 30, 0, 1)}
   def h_Q2_xB = {new H2F("$it", "$it", 100, 0, 1,100, 0, 12)}
-  def h_t_xB = {new H2F("$it", "$it", 100, 0, 1,100, 0, 2)}
+  def h_t_xB = {new H2F("$it", "$it", 100, 0, 1,100, 0, 4)}
   def h_Q2_t = {new H2F("$it", "$it", 100, 0, 4,100, 0, 12)}
   def h_Q2_theta = {new H2F("$it", "$it", 100, 0, 45, 100, 0, 12)}
 
@@ -589,24 +589,24 @@ class dvcs_EB{
             def xBQ2tbin = xBQ2tbin(xB, Q2, t2)
 
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             
             if (pro_status>=4000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
 
             if (gam_status<2000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
 
             if (pro_status>=4000 && gam_status<2000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
           } // exclusivity cuts ended
