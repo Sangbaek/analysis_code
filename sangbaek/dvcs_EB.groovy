@@ -77,26 +77,49 @@ class dvcs_EB{
   def h_gam_energy_corr_diff = {new H2F("$it", "$it", 100, 0, 10, 100, -1, 1)}
 
   //binning
-  def xB_array = [0, 0.1, 0.15, 0.2, 0.3, 0.4, 1]
-  def t_array = [0, 0.09, 0.13, 0.18, 0.23, 0.3, 0.39, 0.52, 0.72, 1.1, 2]
-  def Q2_array = [1, 1.7, 2.22, 2.7, 3.5, 11]
+  // def xB_array = [0, 0.1, 0.15, 0.2, 0.3, 0.4, 1]
+  // def t_array = [0, 0.09, 0.13, 0.18, 0.23, 0.3, 0.39, 0.52, 0.72, 1.1, 2]
+  // def Q2_array = [1, 1.7, 2.22, 2.7, 3.5, 11]
 
-  def xB_bin = {xB ->
+  // def xB_bin = {xB ->
+  //   int xBbin = xB_array.findIndexOf{ xB < it} -1
+  //   if (xBbin == -2) xBbin = xBbin + xB_array.size() +1 //length
+  //   return xBbin
+  // }
+
+  // def Q2_bin = {Q2 ->
+  //   int Q2bin = Q2_array.findIndexOf{ Q2 < it} -1
+  //   if (Q2bin == -2) Q2bin = Q2bin + Q2_array.size() +1 //length
+  //   return Q2bin
+  // }
+
+  // def t_bin = {t ->
+  //   int tbin = t_array.findIndexOf{ t < it} -1
+  //   if (tbin == -2) tbin = tbin + t_array.size() +1 //length
+  //   return tbin
+  // }
+
+  def xB_array = [0, 0.16, 0.26]
+  def Q2_arrays = [[1, 1.75], [1, 2.4], [1, 3.25]]
+  def t_arrays = [[0, 0.15, 0.25, 0.45], [0, 0.22, 0.4, 0.80], [0, 0.40, 0.70, 1.15]]
+
+  def xBQ2tbin = {xB, Q2, t ->
     int xBbin = xB_array.findIndexOf{ xB < it} -1
     if (xBbin == -2) xBbin = xBbin + xB_array.size() +1 //length
-    return xBbin
-  }
 
-  def Q2_bin = {Q2 ->
+    def Q2_array = Q2_arrays[xBbin]
+    def t_array = t_arrays[xBbin]
+
     int Q2bin = Q2_array.findIndexOf{ Q2 < it} -1
     if (Q2bin == -2) Q2bin = Q2bin + Q2_array.size() +1 //length
-    return Q2bin
-  }
 
-  def t_bin = {t ->
     int tbin = t_array.findIndexOf{ t < it} -1
     if (tbin == -2) tbin = tbin + t_array.size() +1 //length
-    return tbin
+
+    int xBtbin = xB_array.size() * tbin + xBbin + 1
+    int xBQ2tbin = xB_array.size() * t_array.size() * Q2bin + xBtbin
+
+    return xBQ2tbin
   }
 
   // pid histograms
@@ -410,9 +433,9 @@ class dvcs_EB{
             // fill t dependence on 2 fold binning (xB, Q2)
             int xBbin = 1 + 2 * Math.floor(xB/0.2)
             int Q2bin = 1 + 2 * Math.floor(Q2/2)
-            def xBbin2 = xB_bin(xB)
-            def Q2bin2 = Q2_bin(Q2)
-            def tbin = t_bin(t2)
+            // def xBbin2 = xB_bin(xB)
+            // def Q2bin2 = Q2_bin(Q2)
+            // def tbin = t_bin(t2)
             def helicity = event.helicity
 
             //electron pid
@@ -528,14 +551,14 @@ class dvcs_EB{
               hists.computeIfAbsent("/dvcs/pi0/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
               def costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
               def t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta)/(M+nu)
-              def tbin_pi0 = t_bin(t)//t_bin(t_pi0)
+              def xBQ2tbin_pi0 = xBQ2tbin(xB, Q2, t)//t_bin(t_pi0)
               if (pi0.mass()<0.2 && pi0.mass()>0.08)  {
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_t", h_t).fill(t_pi0)
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(pi0.e(), nu + t/2/M)
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(pi0.e(), nu + t_pi0/2/M)
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
-                hists.computeIfAbsent("/dvcs/pi0/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
+                hists.computeIfAbsent("/dvcs/pi0/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin_pi0}", h_cross_section).fill(TrentoAng)
               }
               else if (number_of_photons>2){
                 def gam3_ind = (0..<event.npart).findAll{event.pid[it]==22}.max{ind->
@@ -552,33 +575,39 @@ class dvcs_EB{
                 if (pi0.mass()<0.2 && pi0.mass()>0.08)  {
                   costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
                   t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta)/(M+nu)
-                  tbin_pi0 = t_bin(t)//t_bin(t_pi0)
+                  // tbin_pi0 = t_bin(t)//t_bin(t_pi0)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_t", h_t).fill(t_pi0)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(pi0.e(), nu + t/2/M)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_virtual", h_gam_energy_corr).fill(pi0.e(), nu + t_pi0/2/M)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
-                  hists.computeIfAbsent("/dvcs/pi0/gam3/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin_pi0}", h_cross_section).fill(TrentoAng)
+                  hists.computeIfAbsent("/dvcs/pi0/gam3/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin_pi0}", h_cross_section).fill(TrentoAng)
                 }
               }
             }
 
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+            def xBQ2tbin = xBQ2tbin(xB, Q2, t2)
+
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             
             if (pro_status>=4000){
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
 
             if (gam_status<2000){
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
 
             if (pro_status>=4000 && gam_status<2000){
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_Q2_xB).fill(xB,Q2)
-              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_gam_FT_xB_${xBbin2}_Q2_${Q2bin2}_t_${tbin}", h_cross_section).fill(TrentoAng)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t)
+              hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
             }
           } // exclusivity cuts ended
         }//kine cuts ended
