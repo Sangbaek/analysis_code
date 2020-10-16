@@ -46,6 +46,7 @@ class dvcs{
   def h_t_trento_logarithmic =  {new H2F("$it", "$it", 360, 0, 360, 30, -4 , 0.6)}
 
   def h_t_t = {new H2F("$it", "$it", 100,0,4, 100,0,4)}
+  def h_trento_trento = {new H2F("$it", "$it", 100,0,360, 100,0,360)}
 
   def h_Q2_xB_logarithmic = {new H2F("$it", "$it", 30, -1.31, -0.096, 30, 0, 1)}
   def h_Q2_xB = {new H2F("$it", "$it", 100, 0, 1,100, 0, 12)}
@@ -63,7 +64,7 @@ class dvcs{
   def h_ep_azimuth_diff = {new H1F("$it", "$it", 80, 0, 360)}
   def h_ep_polar = {new H2F("$it", "$it", 90, 0, 90, 90, 0, 90)}
 
-  def h_cross_section = {new H1F("$it","$it", 24, 0, 360)}
+  def h_cross_section = {new H1F("$it","$it", 30, 0, 360)}
 
   // count total events collected
   def h_events = {new H1F("$it","$it",12, 0,12)}
@@ -197,6 +198,7 @@ class dvcs{
         def xB = KinTool.calcXb(beam, ele)
         def Q2 = KinTool.calcQ2(beam, ele)
         def TrentoAng = KinTool.calcPhiTrento(beam, ele, pro); // phi
+        def TrentoAng2 = KinTool.calcPhiTrento2(beam, ele, gam)
         def t = KinTool.calcT(pro) //-t
         def nu = KinTool.calcNu(beam, ele)
         def costheta = VGS.vect().dot(gam.vect())/VGS.vect().mag()/gam.vect().mag()
@@ -316,7 +318,7 @@ class dvcs{
           hists.computeIfAbsent("/epg/pid/gam/theta_mom_"+gam_string, h_theta_mom).fill(gam.p(), Math.toDegrees(gam.theta()))
         }
 
-        if (DVCS.KineCuts(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>0.4)){
+        if (DVCS.KineCuts_xcG(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>0.4)){
 
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 
@@ -428,7 +430,7 @@ class dvcs{
             hists.computeIfAbsent("/excl/cuts/coplanarity/mm2epg_me", h_mm2_me).fill(VMISS.e(), VMISS.mass2())
          }
 
-          if (DVCS.ExclCuts(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
+          if (DVCS.ExclCuts_xcG(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
 
@@ -597,6 +599,8 @@ class dvcs{
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/xcG/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/xcG/h_trento_trento_${xBQ2tbin}", h_trento_trento).fill(TrentoAng2, TrentoAng)
             
             if (pro_status>=4000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)

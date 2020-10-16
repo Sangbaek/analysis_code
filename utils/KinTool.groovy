@@ -43,6 +43,17 @@ class KinTool{
 	return trento
     }
 
+    static def calcPhiTrento2(LorentzVector beam, LorentzVector measured_el,LorentzVector measured_gam){
+
+    LorentzVector VGS = new LorentzVector(beam)
+    def v1 = VGS.vect().cross(measured_el.vect())
+    def v2 = VGS.vect().cross(measured_gam.vect())
+    def TrentoAng2 = KinTool.Vangle(v1,v2)
+    if (VGS.vect().dot(v1.cross(v2))<0) TrentoAng2 = 360 - TrentoAng2
+    return TrentoAng2
+    }
+
+
     static def delta_meas_energy( Double beam,  LorentzVector measured_el ){
 	def calc_e = beam/(1+ (beam/PDGDatabase.getParticleMass(2212))*(1-Math.cos(measured_el.theta())) );
 	return (calc_e  - measured_el.e() )

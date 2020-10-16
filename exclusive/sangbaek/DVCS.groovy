@@ -182,4 +182,18 @@ class DVCS {
      && KinTool.Vangle(VG1.vect(),VmissG.vect()) < 3
      && KinTool.Vangle(Vhad2,Vhadr) < 25)
   }
+
+  //cross check with Guillaume
+  static def KineCuts_xcG(xB, Q2, W, VE, VG1){
+      xB>0 && xB<1 && W>2 && Q2>1 && VE.e()>2 && VG1.e() > 2
+  }
+
+  static def ExclCuts_xcG(VG1, VE, VMISS, VmissP, VmissG, Vhadr, Vhad2){
+     (KinTool.Vangle(VG1.vect(),VE.vect())> 10
+     && VMISS.e()<1.2 && VMISS.e()>-0.5 
+     && VMISS.mass2() <0.04 && VMISS.mass2() >-0.04 
+     && VmissP.mass2() < 1.7 && VmissP.mass2() > 0.1
+     && Math.sqrt(VMISS.px()*VMISS.px()+VMISS.py()*VMISS.py()) < 0.12
+     && KinTool.Vangle(VG1.vect(),VmissG.vect()) < 1.1)
+  }
 }
