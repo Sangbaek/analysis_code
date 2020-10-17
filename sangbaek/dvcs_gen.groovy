@@ -8,9 +8,6 @@ import exclusive.sangbaek.DVCS
 import utils.KinTool
 import event.Event
 import event.EventConverter
-import pid.sangbaek.electron
-import pid.sangbaek.proton
-import pid.sangbaek.gamma
 import run.Run
 import java.util.concurrent.ConcurrentHashMap
 import org.jlab.clas.pdg.PDGDatabase
@@ -75,6 +72,12 @@ class dvcs_gen{
   def h_t = {new H1F("$it","$it",100,-1,4)}
   def h_y = {new H1F("$it",100,0,1)}
   def h_Q2_W = {new H2F("$it","$it",100, 0, 10, 100, 0, 12)}
+
+  // to check xB, Q2, -t, phi bin by bin
+  def h_xB_bin = {new H1F("$it", "$it", 1000, 0, 1)}
+  def h_t_bin = {new H1F("$it", "$it", 1000, 0, 4)}
+  def h_Q2_bin = {new H1F("$it", "$it", 1000, 1, 12)}
+  def h_phi_bin = {new H1F("$it", "$it", 1000, 0, 360)}
 
   // kinematic correction
   def h_gam_energy_corr = {new H2F("$it", "$it", 100, 0, 10, 100, 0, 10)}
@@ -142,9 +145,6 @@ class dvcs_gen{
     return phi
   }
 
-  def electron_selector = new electron()
-  def proton_selector = new proton()
-  def gamma_selector = new gamma()
   def beam = LorentzVector.withPID(11, 0, 0, 10.6)
   def target = LorentzVector.withPID(2212, 0, 0, 0)
   def M = PDGDatabase.getParticleMass(2212)
@@ -198,8 +198,7 @@ class dvcs_gen{
         // Now kinematics used to cross sections
         def xB = KinTool.calcXb(beam, ele)
         def Q2 = KinTool.calcQ2(beam, ele)
-        def TrentoAng = KinTool.calcPhiTrento(beam, ele, pro); // phi
-        def TrentoAng2 = KinTool.calcPhiTrento2(beam, ele, gam)
+        def TrentoAng = KinTool.calcPhiTrento2(beam, ele, gam)
         def t = KinTool.calcT(pro) //-t
         def nu = KinTool.calcNu(beam, ele)
         def costheta = VGS.vect().dot(gam.vect())/VGS.vect().mag()/gam.vect().mag()
@@ -433,7 +432,7 @@ class dvcs_gen{
             // def xBbin2 = xB_bin(xB)
             // def Q2bin2 = Q2_bin(Q2)
             // def tbin = t_bin(t2)
-            def helicity = event.helicity
+            def helicity = -event.helicity
 
             //electron pid
             hists.computeIfAbsent("/excl/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.mc_vz[ele_ind])
@@ -552,6 +551,8 @@ class dvcs_gen{
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
                 hists.computeIfAbsent("/dvcs/pi0/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin_pi0}", h_cross_section).fill(TrentoAng)
+
+                return
               }
               else if (number_of_photons>2){
                 def gam3_ind = (0..<event.mc_npart).findAll{event.mc_pid[it]==22}.max{ind->
@@ -575,6 +576,8 @@ class dvcs_gen{
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_4vec", h_gam_energy_corr_diff).fill(pi0.e(), nu + t/2/M - pi0.e())
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_diff_virtual", h_gam_energy_corr_diff).fill(pi0.e(), nu + t_pi0/2/M - pi0.e())
                   hists.computeIfAbsent("/dvcs/pi0/gam3/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin_pi0}", h_cross_section).fill(TrentoAng)
+                
+                  return
                 }
               }
             }
@@ -584,8 +587,10 @@ class dvcs_gen{
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/xcG/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng2)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/xcG/h_trento_trento_${xBQ2tbin}", h_trento_trento).fill(TrentoAng2, TrentoAng)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_xB_xBQ2t_${xBQ2tbin}", h_xB_bin).fill(xB)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xBQ2t_${xBQ2tbin}", h_Q2_bin).fill(Q2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xBQ2t_${xBQ2tbin}", h_t_bin).fill(t2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_phi_xBQ2t_${xBQ2tbin}", h_phi_bin).fill(TrentoAng)
             
             if (pro_status>=4000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
