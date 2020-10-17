@@ -45,7 +45,7 @@ class KinTool{
 
     static def calcPhiTrento2(LorentzVector beam, LorentzVector measured_el,LorentzVector measured_gam){
 
-    LorentzVector VGS = new LorentzVector(beam)
+    LorentzVector VGS = beam - measured_el
     def v1 = VGS.vect().cross(measured_el.vect())
     def v2 = VGS.vect().cross(measured_gam.vect())
     def TrentoAng2 = KinTool.Vangle(v1,v2)
