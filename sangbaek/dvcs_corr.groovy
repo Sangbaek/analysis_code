@@ -77,10 +77,10 @@ class dvcs_corr{
   def h_Q2_W = {new H2F("$it","$it",100, 0, 10, 100, 0, 12)}
 
   // to check xB, Q2, -t, phi bin by bin
-  def h_xB_bin = {new H1F("$it", "$it", 1000, 0, 1)}
-  def h_t_bin = {new H1F("$it", "$it", 1000, 0, 4)}
-  def h_Q2_bin = {new H1F("$it", "$it", 1000, 1, 12)}
-  def h_phi_bin = {new H1F("$it", "$it", 1000, 0, 360)}
+  def h_xB_bin = {new H1F("$it", "$it", 1200, 0, 1)}
+  def h_t_bin = {new H1F("$it", "$it", 1200, 0, 4)}
+  def h_Q2_bin = {new H1F("$it", "$it", 1200, 1, 12)}
+  def h_phi_bin = {new H1F("$it", "$it", 1200, 0, 360)}
 
   // kinematic correction
   def h_gam_energy_corr = {new H2F("$it", "$it", 100, 0, 10, 100, 0, 10)}
@@ -615,10 +615,12 @@ class dvcs_corr{
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xB_xBQ2t_${xBQ2tbin}", h_t_xB).fill(xB,t2)
             hists.computeIfAbsent("/dvcs/heli_$helicity/h_trento_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_xB_xBQ2t_${xBQ2tbin}", h_xB_bin).fill(xB)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xBQ2t_${xBQ2tbin}", h_Q2_bin).fill(Q2)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xBQ2t_${xBQ2tbin}", h_t_bin).fill(t2)
-            hists.computeIfAbsent("/dvcs/heli_$helicity/h_phi_xBQ2t_${xBQ2tbin}", h_phi_bin).fill(TrentoAng)
+
+            int phibin = (int) TrentoAng/12
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_xB_xBQ2t_${xBQ2tbin}_phi_${phibin}", h_xB_bin).fill(xB)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xBQ2t_${xBQ2tbin}_phi_${phibin}", h_Q2_bin).fill(Q2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_t_xBQ2t_${xBQ2tbin}_phi_${phibin}", h_t_bin).fill(t2)
+            hists.computeIfAbsent("/dvcs/heli_$helicity/h_phi_xBQ2t_${xBQ2tbin}_phi_${phibin}", h_phi_bin).fill(TrentoAng)
             
             if (pro_status>=4000){
               hists.computeIfAbsent("/dvcs/heli_$helicity/h_Q2_xB_pro_CD_xBQ2t_${xBQ2tbin}", h_Q2_xB).fill(xB,Q2)
