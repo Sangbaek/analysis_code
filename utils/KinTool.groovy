@@ -1,5 +1,6 @@
 package utils
 import org.jlab.clas.physics.LorentzVector
+import org.jlab.clas.physics.Vector3
 import org.jlab.clas.pdg.PDGDatabase
 
 
