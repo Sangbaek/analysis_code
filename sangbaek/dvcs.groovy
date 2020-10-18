@@ -208,6 +208,14 @@ class dvcs{
         def t = KinTool.calcT(pro) //-t
         def nu = KinTool.calcNu(beam, ele)
         def t2 = KinTool.calcT2(beam, ele, gam)
+        //calc tcol tmin
+        def E = beam.e()
+        def tmin = M*M*xB*xB/(1-xB+xB*M*M/Q2)
+        def tcol = Q2*(Q2-2*xB*M*E)/xB/(Q2-2*M*E)
+        // fill t dependence on 2 fold binning (xB, Q2)
+        int xBbin = 1 + 2 * Math.floor(xB/0.2)
+        int Q2bin = 1 + 2 * Math.floor(Q2/2)
+        def helicity = -event.helicity
 
         // Fill Histogram
         hists.computeIfAbsent("/epg/elec_polar_sec"+ele_sec, h_polar_rate).fill(Math.toDegrees(ele.theta()))
@@ -495,15 +503,6 @@ class dvcs{
             }
 
             hists.computeIfAbsent("/events/events", h_events).fill(5.5)
-
-            //calc tcol tmin
-            def E = beam.e()
-            def tmin = M*M*xB*xB/(1-xB+xB*M*M/Q2)
-            def tcol = Q2*(Q2-2*xB*M*E)/xB/(Q2-2*M*E)
-            // fill t dependence on 2 fold binning (xB, Q2)
-            int xBbin = 1 + 2 * Math.floor(xB/0.2)
-            int Q2bin = 1 + 2 * Math.floor(Q2/2)
-            def helicity = -event.helicity
 
             //electron pid
             hists.computeIfAbsent("/excl/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.vz[ele_ind])
