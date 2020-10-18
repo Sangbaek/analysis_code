@@ -454,7 +454,7 @@ class dvcs{
               hists.computeIfAbsent("/dvcs/pi0/pi0_cone_angle",h_angle).fill(KinTool.Vangle(ele.vect(),pi0.vect()))
               hists.computeIfAbsent("/dvcs/pi0/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
               def costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
-              def t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta)/(M+nu)
+              def t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta_pi0)/(M+nu)
               def xBQ2tbin_pi0 = xBQ2tbin(xB, Q2, t)//t_bin(t_pi0)
               if (pi0.mass()<0.2 && pi0.mass()>0.08)  {
                 hists.computeIfAbsent("/dvcs/pi0/kin_corr/h_t", h_t).fill(t_pi0)
@@ -480,7 +480,7 @@ class dvcs{
                 hists.computeIfAbsent("/dvcs/pi0/gam3/recon_pi0_cone_angle",h_angle).fill(KinTool.Vangle(VmissG.vect(),pi0.vect()))
                 if (pi0.mass()<0.2 && pi0.mass()>0.08)  {
                   costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
-                  t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta)/(M+nu)
+                  t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta_pi0)/(M+nu)
                   // tbin_pi0 = t_bin(t)//t_bin(t_pi0)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_t", h_t).fill(t_pi0)
                   hists.computeIfAbsent("/dvcs/pi0/gam3/kin_corr/h_gam_energy_corr_4vec", h_gam_energy_corr).fill(pi0.e(), nu + t/2/M)
