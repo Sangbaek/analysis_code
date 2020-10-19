@@ -16,7 +16,7 @@ class beamCharge{
 
   def minbeamCharge = 1000000
   def maxbeamCharge = -1000000
-  def laststage = 0
+  def dvcscounts = 0
 
   def electron_selector = new electron()
   def proton_selector = new proton()
@@ -90,6 +90,8 @@ class beamCharge{
 
           if (DVCS.ExclCuts_xcG(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
+            dvcscounts ++
+
             def number_of_photons = gamma_selector.applyCuts_Custom(event).size()
             if (number_of_photons>1){
               def gam2_ind = gamma_selector.applyCuts_Custom(event).max{ind->
@@ -114,13 +116,17 @@ class beamCharge{
             def beamCharge = event.beamCharge
             if (minbeamCharge>beamCharge){
               minbeamCharge = beamCharge
-              println("Minimum updated!")
-              println(event.run_number + " run, " + event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              println("debug: minimum updated!")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
             }
             if (maxbeamCharge<beamCharge){
               maxbeamCharge = beamCharge
-              println("Maximum updated!")
-              println(event.run_number + " run, " + event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              println("debug: maximum updated!")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+            }
+            if (dvcscounts.intdiv(100000)){
+              println("debug: having " + dvcscounts + " dvcs events...")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
             }
           } // exclusivity cuts ended
         }//kine cuts ended
