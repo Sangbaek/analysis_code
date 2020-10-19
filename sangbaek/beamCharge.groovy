@@ -36,7 +36,7 @@ class beamCharge{
     println("minimum beam charge (mC): " + minbeamCharge)
     def intbeamCharge = maxbeamCharge - minbeamCharge
     println("integrated beam charge (mC): " + intbeamCharge)
-    def rhotarget = 71
+    def rhotarget = 0.071 // in g/cm^3
     println("target density (mg/cm^3): "+rhotarget)
     def na = 6.022E23 // Avogadro's
     def h2aw = 1.00784 // hydrogen atomic weight
