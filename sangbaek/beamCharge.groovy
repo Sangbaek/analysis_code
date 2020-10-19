@@ -115,9 +115,9 @@ class beamCharge{
             if (!maxbeamCharge) maxbeamCharge = beamCharge            
             else if (maxbeamCharge<beamCharge) maxbeamCharge = beamCharge
 
-            if (event.event_number.intdiv(10000)>laststage){
+            if (event.event_number.intdiv(100000)>laststage){
               println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
-              laststage = event.event_number.intdiv(10000)
+              laststage = event.event_number.intdiv(100000)
             }
           } // exclusivity cuts ended
         }//kine cuts ended
