@@ -115,16 +115,12 @@ class beamCharge{
             if (minbeamCharge>beamCharge){
               minbeamCharge = beamCharge
               println("Minimum updated!")
-              println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              println(event.run_number + " run, " + event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
             }
             if (maxbeamCharge<beamCharge){
               maxbeamCharge = beamCharge
               println("Maximum updated!")
-              println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
-            }
-            if (event.event_number.intdiv(100000)>laststage){
-              println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
-              laststage = event.event_number.intdiv(100000)
+              println(event.run_number + " run, " + event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
             }
           } // exclusivity cuts ended
         }//kine cuts ended
