@@ -22,21 +22,8 @@ def outname = args[0].split('/')[-1]
 def processors = [new beamCharge()]
 
 def evcount = new AtomicInteger()
-def save = {
-  processors.each{
-    def out = new TDirectory()
-    out.mkdir("/root")
-    out.cd("/root")
-    it.hists.each{out.writeDataSet(it.value)}
-    def clasname = it.getClass().getSimpleName()
-    out.writeFile("${clasname}.hipo")
-  }
-  println "event count: "+evcount.get()
-  evcount.set(0)
-}
 
 def exe = Executors.newScheduledThreadPool(1)
-exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
   args.eachParallel{fname->
@@ -52,11 +39,8 @@ GParsPool.withPool 12, {
 
     reader.close()
   }
-  processors.each{it.show_beamCharge()}
-
 }
 
-processors.each{if(it.metaClass.respondsTo(it, 'finish')) it.finish()}
+processors.each{if(it.metaClass.respondsTo(it, 'show_beamCharge')) it.show_beamCharge()}
 
 exe.shutdown()
-save()

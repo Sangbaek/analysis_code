@@ -14,7 +14,8 @@ import org.jlab.clas.pdg.PDGDatabase
 
 class beamCharge{
 
-  def minbeamCharge, maxbeamCharge
+  def minbeamCharge = 1000000
+  def maxbeamCharge = -1000000
   def laststage = 0
 
   def electron_selector = new electron()
@@ -52,6 +53,7 @@ class beamCharge{
     def intLuminosity  = thickness * beamParticles
     println("integrated luminosity (/cm^2): " + intLuminosity)
   }
+
   def processEvent(event){
 
     if (event.npart>0) {
@@ -110,11 +112,16 @@ class beamCharge{
 
             //count max lumi and min lumi of inbending and outbending
             def beamCharge = event.beamCharge
-            if (!minbeamCharge) minbeamCharge = beamCharge
-            else if (minbeamCharge>beamCharge) minbeamCharge = beamCharge
-            if (!maxbeamCharge) maxbeamCharge = beamCharge            
-            else if (maxbeamCharge<beamCharge) maxbeamCharge = beamCharge
-
+            if (minbeamCharge>beamCharge){
+              minbeamCharge = beamCharge
+              println("Minimum updated!")
+              println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+            }
+            if (maxbeamCharge<beamCharge){
+              maxbeamCharge = beamCharge
+              println("Maximum updated!")
+              println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+            }
             if (event.event_number.intdiv(100000)>laststage){
               println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
               laststage = event.event_number.intdiv(100000)
