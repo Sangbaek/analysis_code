@@ -15,6 +15,7 @@ import org.jlab.clas.pdg.PDGDatabase
 class beamCharge{
 
   def minbeamCharge, maxbeamCharge
+  def laststage = 0
 
   def electron_selector = new electron()
   def proton_selector = new proton()
@@ -28,7 +29,7 @@ class beamCharge{
     gam.setPxPyPzE(gam.px()+0.25*gam.px()/gam.e(), gam.py()+0.25*gam.py()/gam.e(), gam.pz()+0.25*gam.pz()/gam.e(), gam.e()+0.25)
   }
 
-  def showbeamCharge(event){
+  def show_beamCharge(event){
 
     println("maximum beam charge (mC): " + maxbeamCharge)
     println("minimum beam charge (mC): " + minbeamCharge)
@@ -49,7 +50,7 @@ class beamCharge{
     def beamParticles = intbeamCharge/eCharge 
     println("number of electrons passed target: "+ beamParticles )
     def intLuminosity  = thickness * beamParticles
-    println("integrated luminosity (/cm^2): " intLuminosity)
+    println("integrated luminosity (/cm^2): " + intLuminosity)
   }
   def processEvent(event){
 
@@ -82,19 +83,6 @@ class beamCharge{
         // Now kinematics used to cross sections
         def xB = KinTool.calcXb(beam, ele)
         def Q2 = KinTool.calcQ2(beam, ele)
-        def TrentoAng = KinTool.calcPhiTrento(beam, ele, pro)
-        def TrentoAng2 = KinTool.calcPhiTrento2(beam, ele, gam)
-        def t = KinTool.calcT(pro) //-t
-        def nu = KinTool.calcNu(beam, ele)
-        def t2 = KinTool.calcT2(beam, ele, gam)
-        //calc tcol tmin
-        def E = beam.e()
-        def tmin = M*M*xB*xB/(1-xB+xB*M*M/Q2)
-        def tcol = Q2*(Q2-2*xB*M*E)/xB/(Q2-2*M*E)
-        // fill t dependence on 2 fold binning (xB, Q2)
-        int xBbin = 1 + 2 * Math.floor(xB/0.2)
-        int Q2bin = 1 + 2 * Math.floor(Q2/2)
-        def helicity = -event.helicity
 
         if (DVCS.KineCuts_xcG(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>0.4)){
 
@@ -106,9 +94,6 @@ class beamCharge{
                 if (ind!=gam_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
               def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam2_ind]})
               def pi0 = gam+gam2
-              def costheta_pi0 = VGS.vect().dot(pi0.vect())/VGS.vect().mag()/pi0.vect().mag()
-              def t_pi0 = (M*Q2+2*M*nu*nu-2*M*Math.sqrt(nu*nu+Q2)*Math.sqrt(pi0.e()*pi0.e()-Mpi0*Mpi0)*costheta_pi0)/(M+nu)
-              def xBQ2tbin_pi0 = xBQ2tbin(xB, Q2, t)//t_bin(t_pi0)
               if (pi0.mass()<0.2 && pi0.mass()>0.08)  {
                 return
               }
@@ -126,10 +111,14 @@ class beamCharge{
             //count max lumi and min lumi of inbending and outbending
             def beamCharge = event.beamCharge
             if (!minbeamCharge) minbeamCharge = beamCharge
-            else if (inbeamCharge>beamCharge) minbeamCharge = beamCharge
+            else if (minbeamCharge>beamCharge) minbeamCharge = beamCharge
             if (!maxbeamCharge) maxbeamCharge = beamCharge            
             else if (maxbeamCharge<beamCharge) maxbeamCharge = beamCharge
 
+            if (event.event_number.intdiv(10000)>laststage){
+              println(event.event_number+"th events... min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              laststage = event.event_number.intdiv(10000)
+            }
           } // exclusivity cuts ended
         }//kine cuts ended
       }// event with e, p, g
