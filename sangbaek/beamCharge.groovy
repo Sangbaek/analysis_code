@@ -16,6 +16,18 @@ class beamCharge{
 
   def minbeamCharge, maxbeamCharge
 
+  def electron_selector = new electron()
+  def proton_selector = new proton()
+  def gamma_selector = new gamma()
+  def beam = LorentzVector.withPID(11, 0, 0, 10.6)
+  def target = LorentzVector.withPID(2212, 0, 0, 0)
+  def M = PDGDatabase.getParticleMass(2212)
+  def Mpi0 = PDGDatabase.getParticleMass(111)
+
+  def photon_kine_correction = {gam ->
+    gam.setPxPyPzE(gam.px()+0.25*gam.px()/gam.e(), gam.py()+0.25*gam.py()/gam.e(), gam.pz()+0.25*gam.pz()/gam.e(), gam.e()+0.25)
+  }
+
   def showbeamCharge(event){
 
     println("maximum beam charge (mC): " + maxbeamCharge)
