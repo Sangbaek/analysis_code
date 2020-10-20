@@ -32,10 +32,10 @@ class beamCharge{
 
   def show_beamCharge(event){
 
-    println("maximum beam charge (mC): " + maxbeamCharge)
-    println("minimum beam charge (mC): " + minbeamCharge)
+    println("maximum beam charge (nC): " + maxbeamCharge)
+    println("minimum beam charge (nC): " + minbeamCharge)
     def intbeamCharge = maxbeamCharge - minbeamCharge
-    println("integrated beam charge (mC): " + intbeamCharge)
+    println("integrated beam charge (nC): " + intbeamCharge)
     def rhotarget = 0.071 // in g/cm^3
     println("target density (g/cm^3): "+rhotarget)
     def na = 6.022E23 // Avogadro's
@@ -43,10 +43,10 @@ class beamCharge{
     def ntarget = rhotarget * na / h2aw
     println("target number density (/cm^3): "+ntarget)
     def length = 5
-    println("target length (mg/cm^3): "+length)
+    println("target length (cm): "+length)
     def thickness = ntarget * length
     println("target thickness (/cm^2): "+thickness)
-    def eCharge = 1.6022E-16 // in mC
+    def eCharge = 1.6022E-10 // in nC
     //number of incoming beam particles
     def beamParticles = intbeamCharge/eCharge 
     println("number of electrons passed target: "+ beamParticles )
