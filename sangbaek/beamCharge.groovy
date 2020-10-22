@@ -117,16 +117,16 @@ class beamCharge{
             if (minbeamCharge>beamCharge){
               minbeamCharge = beamCharge
               println("debug: minimum updated!")
-              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in nC.")
             }
             if (maxbeamCharge<beamCharge){
               maxbeamCharge = beamCharge
               println("debug: maximum updated!")
-              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in nC.")
             }
             if (dvcscounts.intdiv(100000)){
               println("debug: having " + dvcscounts + " dvcs events...")
-              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in mC.")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in nC.")
             }
           } // exclusivity cuts ended
         }//kine cuts ended
