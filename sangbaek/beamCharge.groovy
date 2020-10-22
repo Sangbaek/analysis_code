@@ -92,9 +92,9 @@ class beamCharge{
 
             dvcscounts ++
 
-            def number_of_photons = gamma_selector.applyCuts_Custom(event).size()
+            def number_of_photons = gamma_selector.applyCuts_Stefan(event).size()
             if (number_of_photons>1){
-              def gam2_ind = gamma_selector.applyCuts_Custom(event).max{ind->
+              def gam2_ind = gamma_selector.applyCuts_Stefan(event).max{ind->
                 if (ind!=gam_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
               def gam2 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam2_ind]})
               def pi0 = gam+gam2
@@ -102,7 +102,7 @@ class beamCharge{
                 return
               }
               else if (number_of_photons>2){
-                def gam3_ind = gamma_selector.applyCuts_Custom(event).max{ind->
+                def gam3_ind = gamma_selector.applyCuts_Stefan(event).max{ind->
                   if (ind!=gam_ind && ind!=gam2_ind) new Vector3(*[event.px, event.py, event.pz].collect{it[ind]}).mag2()}
                 def gam3 = LorentzVector.withPID(22, *[event.px, event.py, event.pz].collect{it[gam3_ind]})
                 pi0 = gam+gam3
