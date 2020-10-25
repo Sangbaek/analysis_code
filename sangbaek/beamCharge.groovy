@@ -14,9 +14,10 @@ import org.jlab.clas.pdg.PDGDatabase
 
 class beamCharge{
 
-  def minbeamCharge = 1000000
-  def maxbeamCharge = -1000000
-  def dvcscounts = 0
+  def minbeamCharge = [:].withDefault{10000}
+  def maxbeamCharge = [:].withDefault{-10000}
+  def dvcscounts = [:].withDefault{0}
+  def list_of_runs = []
 
   def electron_selector = new electron()
   def proton_selector = new proton()
@@ -32,9 +33,17 @@ class beamCharge{
 
   def show_beamCharge(event){
 
-    println("maximum beam charge (nC): " + maxbeamCharge)
-    println("minimum beam charge (nC): " + minbeamCharge)
-    def intbeamCharge = maxbeamCharge - minbeamCharge
+    def intbeamCharge = 0
+    println("list of runs in files read: " + list_of_runs)
+    list_of_runs.each{ run_number ->
+      println("run: " + run_number)
+      println("maximum beam charge (nC): " + maxbeamCharge[run_number])
+      println("minimum beam charge (nC): " + minbeamCharge[run_number])
+      def beamChargediff = maxbeamCharge[run_number] - minbeamCharge[run_number]
+      println("charge accumulated in this run (nC): " + beamChargediff)
+      intbeamCharge = intbeamCharge + beamChargediff
+      println("charge accumulated so far (nC): " + intbeamCharge)
+    }
     println("integrated beam charge (nC): " + intbeamCharge)
     def rhotarget = 0.071 // in g/cm^3
     println("target density (g/cm^3): "+rhotarget)
@@ -58,6 +67,10 @@ class beamCharge{
 
     if (event.npart>0) {
 
+      def run_number = event.run_number
+      if (!list_of_runs.contains(run_number)){
+        list_of_runs = [*list_of_runs,run_number]
+      }
       // get epg coincidence, no exclusive cut applied. electron cut from Brandon's package
       def dsets = DVCS.getEPG(event, electron_selector, proton_selector, gamma_selector)
       def (ele, pro, gam) = dsets*.particle.collect{it ? it.vector() : null} 
@@ -90,7 +103,7 @@ class beamCharge{
 
           if (DVCS.ExclCuts_xcG(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
-            dvcscounts ++
+            dvcscounts[run_number]++
 
             def number_of_photons = gamma_selector.applyCuts_Stefan(event).size()
             if (number_of_photons>1){
@@ -114,19 +127,19 @@ class beamCharge{
 
             //count max lumi and min lumi of inbending and outbending
             def beamCharge = event.beamCharge
-            if (minbeamCharge>beamCharge){
-              minbeamCharge = beamCharge
-              println("debug: minimum updated!")
-              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in nC.")
+            if (minbeamCharge[run_number]>beamCharge){
+              minbeamCharge[run_number] = beamCharge
+              println("debug: minimum updated in the run $run_number!")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge[run_number] + ", current " + beamCharge + ", max "+maxbeamCharge[run_number] +" in nC.")
             }
-            if (maxbeamCharge<beamCharge){
-              maxbeamCharge = beamCharge
-              println("debug: maximum updated!")
-              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in nC.")
+            if (maxbeamCharge[run_number]<beamCharge){
+              maxbeamCharge[run_number] = beamCharge
+              println("debug: maximum updated in the run $run_number!")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge[run_number] + ", current " + beamCharge + ", max "+maxbeamCharge[run_number] +" in nC.")
             }
-            if (dvcscounts.intdiv(100000)){
-              println("debug: having " + dvcscounts + " dvcs events...")
-              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge + ", current " + beamCharge + ", max "+maxbeamCharge +" in nC.")
+            if (dvcscounts[run_number].intdiv(10000)){
+              println("debug: having " + dvcscounts[run_number] + " dvcs events in the run " + run_number +"...")
+              println(event.run_number + " run, " + event.event_number+"th events, min "+minbeamCharge[run_number] + ", current " + beamCharge + ", max "+maxbeamCharge[run_number] +" in nC.")
             }
           } // exclusivity cuts ended
         }//kine cuts ended
