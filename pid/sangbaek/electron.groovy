@@ -56,7 +56,7 @@ class electron{
       this.electron_candidate.passElectronDCR1,
       this.electron_candidate.passElectronDCR2,
       this.electron_candidate.passElectronDCR3,
-      this.electron_candidate.passElectronAntiPionCut
+      // this.electron_candidate.passElectronAntiPionCut
     ]
 
     this.electronCutStrategies_Custom = [
