@@ -20,7 +20,7 @@ class filtering{
   def proton_selector = new proton()
   def gamma_selector = new gamma()
 
-  def filterEvent(event){
+  def filterDVCSEvents(event){
 
     if (event.npart>0) {
       def electron_candidate = electron_selector.applyCuts_Brandon(event)
@@ -31,4 +31,17 @@ class filtering{
     }
     return false
   }
+
+  def filterPi0Events(event){
+
+    if (event.npart>0) {
+      def electron_candidate = electron_selector.applyCuts_Brandon(event)
+      def proton_candidate = proton_selector.applyCuts_Stefan(event)
+      def gamma_candidate = gamma_selector.applyCuts_Stefan(event)
+      if (electron_candidate.size()*proton_candidate.size()*gamma_candidate.size() && gamma_candidate.size()>1) return true
+      else return false
+    }
+    return false
+  }
+
 }
