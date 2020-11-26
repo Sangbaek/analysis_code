@@ -1,4 +1,4 @@
-package sangbaek
+package sangbaek.beamCharge
 
 import org.jlab.clas.physics.LorentzVector
 import org.jlab.clas.physics.Vector3
