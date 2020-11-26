@@ -9,7 +9,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import sangbaek.filtering
+import sangbaek.filtering.filtering
 import event.Event
 import event.EventConverter
 import my.Sugar
