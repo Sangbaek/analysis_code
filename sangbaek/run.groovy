@@ -1,3 +1,6 @@
+import org.jlab.jnp.hipo4.data.Event;
+import org.jlab.jnp.hipo4.io.HipoReader
+import org.jlab.io.hipo.HipoDataEvent
 import org.jlab.io.hipo.HipoDataSource
 import org.jlab.groot.data.H1F
 import org.jlab.groot.data.H2F
@@ -10,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 // import sangbaek.draw_dcr
 import sangbaek.dvcs.dvcs
-import sangbaek.dvcs.dvcs_corr
+import sangbaek.dvcs.dvcs_counts
 import event.Event
 import event.EventConverter
 import my.Sugar
@@ -20,7 +23,7 @@ Sugar.enable()
 
 def outname = args[0].split('/')[-1]
 
-def processors = [new dvcs(), new dvcs_corr()]
+def processors = [new dvcs_counts()]
 
 def evcount = new AtomicInteger()
 def save = {
@@ -41,16 +44,18 @@ exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
   args.eachParallel{fname->
-    def reader = new HipoDataSource()
+    def reader = new HipoReader()
     reader.open(fname)
 
-    while(reader.hasEvent()) {
+    def jnp_event = new org.jlab.jnp.hipo4.data.Event()
+
+    while(reader.hasNext()) {
       evcount.getAndIncrement()
-      def data_event = reader.getNextEvent()
+      reader.nextEvent(jnp_event)
+      def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
       def event = EventConverter.convert(data_event)
       processors.each{it.processEvent(event)}
     }
-
     reader.close()
   }
 }

@@ -1,5 +1,8 @@
+import org.jlab.jnp.hipo4.data.Event;
+import org.jlab.jnp.hipo4.io.HipoReader
+import org.jlab.jnp.hipo4.io.HipoWriter
+import org.jlab.io.hipo.HipoDataEvent
 import org.jlab.io.hipo.HipoDataSource
-import org.jlab.io.hipo.HipoDataSync
 import org.jlab.groot.data.H1F
 import org.jlab.groot.data.H2F
 import org.jlab.groot.data.TDirectory
@@ -59,21 +62,24 @@ def exe = Executors.newScheduledThreadPool(1)
 exe.scheduleWithFixedDelay(debug, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
-  def reader = new HipoDataSource()
+  def reader = new HipoReader()
   reader.open(args[0])
-  def writer = new HipoDataSync()
+  def writer = new HipoWriter(reader.getSchemaFactory())
   writer.open(outname)
 
-  while(reader.hasEvent()) {
+  def jnp_event = new org.jlab.jnp.hipo4.data.Event()
+
+  while(reader.hasNext()) {
     evcount.getAndIncrement()
-    def data_event = reader.getNextEvent()
+    reader.nextEvent(jnp_event)
+    def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
     def event = EventConverter.convert(data_event)
-    if (event.event_number==0 || filterEvents(event, processor, mode)) {
-      writer.writeEvent(data_event)
+    if (filterEvents(event, processor, mode)) {
+      writer.addEvent(jnp_event)
     }
   }
-  reader.close()
   writer.close()
+  reader.close()
 }
 
 exe.shutdown()
