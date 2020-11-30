@@ -44,4 +44,15 @@ class filtering{
     return false
   }
 
+  def filterEPGs(event){
+    if (event.npart>0) {
+      def electron_candidates = electron_selector.applyCuts_Brandon(event)
+      def proton_candidates = proton_selector.applyCuts_Stefan(event)
+      def gamma_candidates = gamma_selector.applyCuts_Stefan(event)
+      if (electron_candidates&&proton_candidates&&gamma_candidates) return [*electron_candidates, *proton_candidates, *gamma_candidates]
+      else return null
+    }
+    return null
+  }
+
 }

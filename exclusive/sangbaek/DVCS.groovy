@@ -119,8 +119,15 @@ class DVCS {
       else secs.add(null)
     }
 
+    def vz_ele = event.vz[inds[0]]
+    def vz_pro = event.vz[inds[1]]
+    def p_pro  = event.p[inds[1]]
+    def vzdiff = Math.abs(vz_ele-vz_pro)
+    if (vzdiff>2.5+2.5/p_pro) return [null, null, null]
+
     def parts = [11,2212,22].withIndex()
-      .collect{pid,i -> new Particle(pid, *[event.px, event.py, event.pz].collect{it[inds[i]]})
+      .collect{pid,i -> 
+        if(event.px[inds[i]]&& event.py[inds[i]]&& event.pz[inds[i]]) new Particle(pid, *[event.px, event.py, event.pz].collect{it[inds[i]]})
     }
 
     return (0..<3).collect{[particle:parts[it], pindex:inds[it], sector:secs[it], status:status[it]]}

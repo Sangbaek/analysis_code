@@ -1,6 +1,10 @@
 import org.jlab.jnp.hipo4.data.Event;
+import org.jlab.jnp.hipo4.data.Bank;
 import org.jlab.jnp.hipo4.io.HipoReader
 import org.jlab.jnp.hipo4.io.HipoWriter
+import org.jlab.jnp.hipo4.data.SchemaFactory
+import org.jlab.jnp.hipo4.operations.BankIterator;
+import org.jlab.jnp.hipo4.operations.BankSelector;
 import org.jlab.io.hipo.HipoDataEvent
 import org.jlab.io.hipo.HipoDataSource
 import org.jlab.groot.data.H1F
@@ -39,47 +43,46 @@ def debug = {
   evcount.set(0)
 }
 
-
-def mode = "dvcs"
-
-if (args.size()>1){
-  if (args[1]=="dvcs" || args[1]=="pi0")  mode = args[1]
-  else{
-    println("The filtering mode must be dvcs or pi0.")
-    println("Halt.")
-    return
-  }
-}
-println("filtering $mode events with fiducial cuts...")
-
-def filterEvents = { ev, proc, mod ->
-  if (mod == "dvcs") return proc.filterDVCSEvents(ev)
-  if (mod == "pi0") return proc.filterPi0Events(ev)
-  else return
-}
-
 def exe = Executors.newScheduledThreadPool(1)
 exe.scheduleWithFixedDelay(debug, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
-  def reader = new HipoReader()
-  reader.open(args[0])
-  def writer = new HipoWriter(reader.getSchemaFactory())
-  writer.open(outname)
+  args.eachParallel{fname->
 
-  def jnp_event = new org.jlab.jnp.hipo4.data.Event()
+    def reader = new HipoReader()
+    reader.open(fname)
+    SchemaFactory schema = reader.getSchemaFactory();
 
-  while(reader.hasNext()) {
-    evcount.getAndIncrement()
-    reader.nextEvent(jnp_event)
-    def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
-    def event = EventConverter.convert(data_event)
-    if (filterEvents(event, processor, mode)) {
-      writer.addEvent(jnp_event)
+    SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
+    def writer = new HipoWriter(writerFactory)
+
+    writer.open(outname)
+    BankIterator           iter = new BankIterator(4096);
+    BankSelector   dataSelector = new BankSelector(schema.getSchema("REC::Particle"));
+
+    def jnp_event = new org.jlab.jnp.hipo4.data.Event()
+
+    while(reader.hasNext() && evcount.get()<10) {
+      evcount.getAndIncrement()
+      reader.nextEvent(jnp_event)
+      if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
+      def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
+      def event = EventConverter.convert(data_event)
+      def partlist = processor.filterEPGs(event)
+
+      if (partlist) {
+        dataSelector.getIterator(jnp_event, iter);
+        iter.reset()
+        partlist.each{iter.addIndex(it)}
+        Bank newBank = BankSelector.reduceBank(dataSelector.getBank(), iter);
+        jnp_event.remove(dataSelector.getBank().getSchema());
+        jnp_event.write(newBank);
+        writer.addEvent(jnp_event)
+      }
     }
+    writer.close()
+    reader.close()
   }
-  writer.close()
-  reader.close()
 }
 
 exe.shutdown()
