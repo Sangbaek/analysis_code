@@ -128,7 +128,7 @@ class DVCS {
     }
 
     (0..<3).each{
-      if(abs(status[it])>=2000 && abs(status[it])<4000){
+      if(Math.abs(status[it])>=2000 && Math.abs(status[it])<4000){
         def sec = determineSector(parts[it].phi())
         secs.add(sec)
       }
