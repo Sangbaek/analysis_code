@@ -81,7 +81,9 @@ class DVCS {
 
   static def getEPG_EB(event) {
 
-    def findElectron = { ev -> (0..<ev.npart).find{ev.pid[it]==11 && ev.status[it]<0} }
+    def findElectron = { ev -> (0..<ev.npart).findAll{ev.pid[it]==11 && ev.status[it]<0}
+      .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
+    }
     def findProton = {ev -> (0..<ev.npart).findAll{ev.pid[it]==2212}
       .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
     }
