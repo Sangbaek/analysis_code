@@ -17,22 +17,19 @@ class DVCS {
     def findElectron = { ev ->
       def electron_candidate = electron_selector.applyCuts_Brandon(ev)
       if(electron_candidate) electron_candidate
-      .max{ind -> 
-        if(event.px[ind]&& event.py[ind]&& event.pz[ind]) (new Vector3(*[event.px, event.py, event.pz].collect{it[ind]})).mag2()}
+      .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
     }
 
     def findProton = { ev ->
       def proton_candidate = proton_selector.applyCuts_Stefan(ev)
       if(proton_candidate) proton_candidate
-      .max{ind -> 
-        if(event.px[ind]&& event.py[ind]&& event.pz[ind]) (new Vector3(*[event.px, event.py, event.pz].collect{it[ind]})).mag2()}
+      .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
     }
 
     def findGamma = { ev ->
       def gamma_candidate = gamma_selector.applyCuts_Stefan(ev)
       if(gamma_candidate) gamma_candidate
-      .max{ind -> 
-        if(event.px[ind]&& event.py[ind]&& event.pz[ind]) (new Vector3(*[event.px, event.py, event.pz].collect{it[ind]})).mag2()}
+      .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
     }
 
 
@@ -81,9 +78,7 @@ class DVCS {
 
   static def getEPG_EB(event) {
 
-    def findElectron = { ev -> (0..<ev.npart).findAll{ev.pid[it]==11 && ev.status[it]<0}
-      .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
-    }
+    def findElectron = { ev -> (0..<ev.npart).find{ev.pid[it]==11 && ev.status[it]<0} }
     def findProton = {ev -> (0..<ev.npart).findAll{ev.pid[it]==2212}
       .max{ind -> (new Vector3(*[ev.px, ev.py, ev.pz].collect{it[ind]})).mag2()}
     }
@@ -110,17 +105,6 @@ class DVCS {
 
     def secs = []
 
-    (0..<3).each{
-      def pcal_sector = pcal_sectors[inds[it]]
-      def ei_sector = ei_sectors[inds[it]]
-      def eo_sector = eo_sectors[inds[it]]
-      if(pcal_sector) secs.add(pcal_sector)
-      else if(ei_sector) secs.add(ei_sector)
-      else if(eo_sector) secs.add(eo_sector)
-      else if (it==1 && ftof_sectors[inds[it]]) secs.add(ftof_sectors[inds[it]].sector?.find{true})
-      else secs.add(null)
-    }
-
     def vz_ele = event.vz[inds[0]]
     def vz_pro = event.vz[inds[1]]
     def p_pro  = event.p[inds[1]]
@@ -130,6 +114,25 @@ class DVCS {
     def parts = [11,2212,22].withIndex()
       .collect{pid,i -> 
         if(event.px[inds[i]]&& event.py[inds[i]]&& event.pz[inds[i]]) new Particle(pid, *[event.px, event.py, event.pz].collect{it[inds[i]]})
+    }
+
+    def determineSector = {phi->
+      phi = Math.toDegrees(phi)
+      if(phi < 30 && phi >= -30){        return 1;}
+      else if(phi < 90 && phi >= 30){    return 2;}
+      else if(phi < 150 && phi >= 90){   return 3;}
+      else if(phi >= 150 || phi < -150){ return 4;}
+      else if(phi < -90 && phi >= -150){ return 5;}
+      else if(phi < -30 && phi >= -90){  return 6;}
+      return 0
+    }
+
+    (0..<3).each{
+      if(abs(status[it])>=2000 && abs(status[it]<4000){
+        def sec = determineSector(parts[it].phi())
+        secs.add(sec)
+      }
+      else secs.add(null)
     }
 
     return (0..<3).collect{[particle:parts[it], pindex:inds[it], sector:secs[it], status:status[it]]}
