@@ -52,9 +52,7 @@ GParsPool.withPool 12, {
     def reader = new HipoReader()
     reader.open(fname)
     SchemaFactory schema = reader.getSchemaFactory();
-
-    SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
-    def writer = new HipoWriter(writerFactory)
+    def writer = new HipoWriter(schema)
 
     writer.open(outname)
     BankIterator           iter = new BankIterator(4096);
@@ -62,7 +60,7 @@ GParsPool.withPool 12, {
 
     def jnp_event = new org.jlab.jnp.hipo4.data.Event()
 
-    while(reader.hasNext()) {
+    while(reader.hasNext()&&evcount.get()<10000) {
       evcount.getAndIncrement()
       reader.nextEvent(jnp_event)
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
