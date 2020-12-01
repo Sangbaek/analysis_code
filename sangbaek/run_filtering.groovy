@@ -40,7 +40,7 @@ def processor = new filtering()
 def evcount = new AtomicInteger()
 def debug = {
   println "event count: "+evcount.get()
-  evcount.set(0)
+//  evcount.set(0)
 }
 
 def exe = Executors.newScheduledThreadPool(1)
@@ -52,15 +52,18 @@ GParsPool.withPool 12, {
     def reader = new HipoReader()
     reader.open(fname)
     SchemaFactory schema = reader.getSchemaFactory();
-    def writer = new HipoWriter(schema)
+//    def writer = new HipoWriter(schema)
+    SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
+    def writer = new HipoWriter(writerFactory)
 
     writer.open(outname)
+
     BankIterator           iter = new BankIterator(4096);
     BankSelector   dataSelector = new BankSelector(schema.getSchema("REC::Particle"));
 
     def jnp_event = new org.jlab.jnp.hipo4.data.Event()
 
-    while(reader.hasNext()&&evcount.get()<10000) {
+    while(reader.hasNext()) {
       evcount.getAndIncrement()
       reader.nextEvent(jnp_event)
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
