@@ -217,13 +217,13 @@ class dvcs_EB_corr{
         def xBQ2tbin = binxBQ2t(xB, Q2, t2)
         int phibin = (int) TrentoAng2/12
 
-        def eidep=0
-        def eodep = 0
-        def pcaldep = 0
-        if( event.ecal_inner_status.contains(ele_ind) )  eidep = event.ecal_inner_energy[ele_ind]
-        if( event.ecal_outer_status.contains(ele_ind) )  eodep = event.ecal_outer_energy[ele_ind]
-        if( event.pcal_status.contains(ele_ind) )        pcaldep = event.pcal_energy[ele_ind]
-        def edep = eidep + eodep + pcaldep
+        // def eidep=0
+        // def eodep = 0
+        // def pcaldep = 0
+        // if( event.ecal_inner_status.contains(ele_ind) )  eidep = event.ecal_inner_energy[ele_ind]
+        // if( event.ecal_outer_status.contains(ele_ind) )  eodep = event.ecal_outer_energy[ele_ind]
+        // if( event.pcal_status.contains(ele_ind) )        pcaldep = event.pcal_energy[ele_ind]
+        // def edep = eidep + eodep + pcaldep
 
         // check deviation from elastic
         def ele_phi = Math.toDegrees(ele.phi())
@@ -236,9 +236,9 @@ class dvcs_EB_corr{
         //electron pid
         hists.computeIfAbsent("/epg/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.vz[ele_ind])
         hists.computeIfAbsent("/epg/pid/ele/vz_theta_S"+ele_sec, h_vz_theta).fill(Math.toDegrees(ele.theta()), event.vz[ele_ind])
-        hists.computeIfAbsent("/epg/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
-        hists.computeIfAbsent("/epg/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
-        hists.computeIfAbsent("/epg/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
+        // hists.computeIfAbsent("/epg/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
+        // hists.computeIfAbsent("/epg/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
+        // hists.computeIfAbsent("/epg/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
         hists.computeIfAbsent("/epg/pid/ele/theta_phi_S"+ele_sec, h_theta_phi).fill(Math.toDegrees(ele.phi()), Math.toDegrees(ele.theta()))
         hists.computeIfAbsent("/epg/pid/ele/theta_mom_S"+ele_sec, h_theta_mom).fill(ele.p(), Math.toDegrees(ele.theta()))
         hists.computeIfAbsent("/epg/pid/ele/theta_S"+ele_sec, h_polar_rate).fill(Math.toDegrees(ele.theta()))
@@ -511,9 +511,9 @@ class dvcs_EB_corr{
                 //electron pid
                 hists.computeIfAbsent("/pi0/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.vz[ele_ind])
                 hists.computeIfAbsent("/pi0/pid/ele/vz_theta_S"+ele_sec, h_vz_theta).fill(Math.toDegrees(ele.theta()), event.vz[ele_ind])
-                hists.computeIfAbsent("/pi0/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
-                hists.computeIfAbsent("/pi0/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
-                hists.computeIfAbsent("/pi0/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
+                // hists.computeIfAbsent("/pi0/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
+                // hists.computeIfAbsent("/pi0/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
+                // hists.computeIfAbsent("/pi0/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
                 hists.computeIfAbsent("/pi0/pid/ele/theta_phi_S"+ele_sec, h_theta_phi).fill(Math.toDegrees(ele.phi()), Math.toDegrees(ele.theta()))
                 hists.computeIfAbsent("/pi0/pid/ele/theta_mom_S"+ele_sec, h_theta_mom).fill(ele.p(), Math.toDegrees(ele.theta()))
                 hists.computeIfAbsent("/pi0/pid/ele/theta_S"+ele_sec, h_polar_rate).fill(Math.toDegrees(ele.theta()))
@@ -657,9 +657,9 @@ class dvcs_EB_corr{
                   //electron pid
                   hists.computeIfAbsent("/pi0/gam3/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.vz[ele_ind])
                   hists.computeIfAbsent("/pi0/gam3/pid/ele/vz_theta_S"+ele_sec, h_vz_theta).fill(Math.toDegrees(ele.theta()), event.vz[ele_ind])
-                  hists.computeIfAbsent("/pi0/gam3/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
-                  hists.computeIfAbsent("/pi0/gam3/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
-                  hists.computeIfAbsent("/pi0/gam3/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
+                  // hists.computeIfAbsent("/pi0/gam3/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
+                  // hists.computeIfAbsent("/pi0/gam3/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
+                  // hists.computeIfAbsent("/pi0/gam3/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
                   hists.computeIfAbsent("/pi0/gam3/pid/ele/theta_phi_S"+ele_sec, h_theta_phi).fill(Math.toDegrees(ele.phi()), Math.toDegrees(ele.theta()))
                   hists.computeIfAbsent("/pi0/gam3/pid/ele/theta_mom_S"+ele_sec, h_theta_mom).fill(ele.p(), Math.toDegrees(ele.theta()))
                   hists.computeIfAbsent("/pi0/gam3/pid/ele/theta_S"+ele_sec, h_polar_rate).fill(Math.toDegrees(ele.theta()))
@@ -790,9 +790,9 @@ class dvcs_EB_corr{
             //electron pid
             hists.computeIfAbsent("/excl/pid/ele/vz_mom_S"+ele_sec, h_vz_mom).fill(ele.p(), event.vz[ele_ind])
             hists.computeIfAbsent("/excl/pid/ele/vz_theta_S"+ele_sec, h_vz_theta).fill(Math.toDegrees(ele.theta()), event.vz[ele_ind])
-            hists.computeIfAbsent("/excl/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
-            hists.computeIfAbsent("/excl/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
-            hists.computeIfAbsent("/excl/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
+            // hists.computeIfAbsent("/excl/pid/ele/pcalecal_S"+ele_sec, h_pcalecal).fill(eidep/ele.p(), pcaldep/ele.p())
+            // hists.computeIfAbsent("/excl/pid/ele/pcalecaldep_S"+ele_sec, h_pcalecal).fill(pcaldep, eidep+eodep)
+            // hists.computeIfAbsent("/excl/pid/ele/Sampl_mom_S"+ele_sec, h_Sampl_mom).fill(ele.p(), edep/ele.p())
             hists.computeIfAbsent("/excl/pid/ele/theta_phi_S"+ele_sec, h_theta_phi).fill(Math.toDegrees(ele.phi()), Math.toDegrees(ele.theta()))
             hists.computeIfAbsent("/excl/pid/ele/theta_mom_S"+ele_sec, h_theta_mom).fill(ele.p(), Math.toDegrees(ele.theta()))
             hists.computeIfAbsent("/excl/pid/ele/theta_S"+ele_sec, h_polar_rate).fill(Math.toDegrees(ele.theta()))
