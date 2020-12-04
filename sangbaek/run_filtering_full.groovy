@@ -63,7 +63,7 @@ GParsPool.withPool 12, {
 
     def jnp_event = new org.jlab.jnp.hipo4.data.Event()
 
-    while(reader.hasNext() && evcount.get() < 5000) {
+    while(reader.hasNext()) {
       evcount.getAndIncrement()
       reader.nextEvent(jnp_event)
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
