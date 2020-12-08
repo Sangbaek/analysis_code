@@ -12,6 +12,7 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 // import sangbaek.draw_dcr
+import sangbaek.dvcs.dvcs_corr
 import sangbaek.dvcs.dvcs_EB_corr
 import event.Event
 import event.EventConverter
@@ -22,7 +23,7 @@ Sugar.enable()
 
 def outname = args[0].split('/')[-1]
 
-def processors = [new dvcs_EB_corr()]
+def processors = [new dvcs_corr()]
 
 def evcount = new AtomicInteger()
 def save = {
