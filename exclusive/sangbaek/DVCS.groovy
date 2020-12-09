@@ -197,7 +197,7 @@ class DVCS {
 
   //cross check with Guillaume
   static def KineCuts_xcG(xB, Q2, W, VE, VG1, VP){
-      xB>0 && xB<1 && W>2 && Q2>1 && VE.e()>2 && VG1.e() > 2 && VP.e() > 0.12
+      xB>0 && xB<1 && W>2 && Q2>1 && VE.e()>2 && VG1.e() > 2 && VP.p() > 0.12
   }
 
   static def ExclCuts_xcG(VG1, VE, VMISS, VmissP, VmissG, Vhadr, Vhad2){
