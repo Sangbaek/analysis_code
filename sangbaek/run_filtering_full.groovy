@@ -5,6 +5,7 @@ import org.jlab.jnp.hipo4.io.HipoWriter
 import org.jlab.jnp.hipo4.data.SchemaFactory
 import org.jlab.jnp.hipo4.operations.BankIterator;
 import org.jlab.jnp.hipo4.operations.BankSelector;
+import org.jlab.jnp.hipo4.data.Schema
 import org.jlab.io.hipo.HipoDataEvent
 import org.jlab.io.hipo.HipoDataSource
 import org.jlab.groot.data.H1F
@@ -23,6 +24,19 @@ import my.Sugar
 
 Sugar.enable()
 /////////////////////////////////////////////////////////////////////
+
+def jsonbank = '''
+    {   
+        "name": "Filter::Indices",
+        "group": 999,
+        "item" : 99,
+        "info": "test",
+        "entries": [
+            {"name":"before",      "type":"I", "info":"indices before filtering"}
+        ]
+    }
+'''
+def customSchema = Schema.fromJsonString(jsonbank)
 
 def outname = args[0].split('/')[-1]
 
@@ -52,8 +66,10 @@ GParsPool.withPool 12, {
     def reader = new HipoReader()
     reader.open(fname)
     SchemaFactory schema = reader.getSchemaFactory();
-   def writer = new HipoWriter(schema)
+    schema.addSchema(customSchema)
+    def writer = new HipoWriter(schema)
     // SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
+    // writerFactory.addSchema(customSchema)
     // def writer = new HipoWriter(writerFactory)
 
     writer.open(outname)
@@ -74,10 +90,15 @@ GParsPool.withPool 12, {
       if (partlist) {
         dataSelector.getIterator(jnp_event, iter);
         iter.reset()
-        partlist.each{iter.addIndex(it)}
+        def customBank = new Bank(customSchema, partlist.size)
+        partlist.eachWithIndex{val, index ->
+          iter.addIndex(val)
+          customBank.putInt("before", index, val)
+        }
         Bank newBank = BankSelector.reduceBank(dataSelector.getBank(), iter);
         jnp_event.remove(dataSelector.getBank().getSchema());
         jnp_event.write(newBank);
+        jnp_event.write(customBank)
         writer.addEvent(jnp_event)
       }
     }
