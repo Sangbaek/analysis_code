@@ -27,7 +27,7 @@ Sugar.enable()
 
 def jsonbank = '''
     {   
-        "name": "Filter::Indices",
+        "name": "FILTER::Index",
         "group": 999,
         "item" : 99,
         "info": "test",
