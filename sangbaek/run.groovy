@@ -11,7 +11,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import sangbaek.dvcs.dvcs
+import sangbaek.dvcs.dvcs_debug
 import sangbaek.dvcs.dvcs_corr
 import sangbaek.dvcs.dvcs_EB_corr
 import event.Event
@@ -35,7 +35,7 @@ def save = {
     def clasname = it.getClass().getSimpleName()
     out.writeFile("${clasname}.hipo")
   }
-  println "event count: "+evcount.get()
+  // println "event count: "+evcount.get()
   evcount.set(0)
 }
 
