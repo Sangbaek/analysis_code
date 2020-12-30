@@ -485,6 +485,8 @@ class dvcs{
 
           if (DVCS.ExclCuts_xcG(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
+            println("run"+event.run_number+ "\t event "+event.event_number)
+
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
 
             def number_of_photons = gamma_selector.applyCuts_Stefan(event).size()
