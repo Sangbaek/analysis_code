@@ -26,18 +26,18 @@ def outname = args[0].split('/')[-1]
 def processors = [new dvcs_debug()]
 
 def evcount = new AtomicInteger()
-def save = {
-  processors.each{
-    def out = new TDirectory()
-    out.mkdir("/root")
-    out.cd("/root")
-    it.hists.each{out.writeDataSet(it.value)}
-    def clasname = it.getClass().getSimpleName()
-    out.writeFile("${clasname}.hipo")
-  }
-  // println "event count: "+evcount.get()
-  evcount.set(0)
-}
+// def save = {
+//   processors.each{
+//     def out = new TDirectory()
+//     out.mkdir("/root")
+//     out.cd("/root")
+//     it.hists.each{out.writeDataSet(it.value)}
+//     def clasname = it.getClass().getSimpleName()
+//     out.writeFile("${clasname}.hipo")
+//   }
+//   // println "event count: "+evcount.get()
+//   evcount.set(0)
+// }
 
 def exe = Executors.newScheduledThreadPool(1)
 exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
@@ -63,4 +63,4 @@ GParsPool.withPool 12, {
 processors.each{if(it.metaClass.respondsTo(it, 'finish')) it.finish()}
 
 exe.shutdown()
-save()
+// save()
