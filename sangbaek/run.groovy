@@ -23,7 +23,7 @@ Sugar.enable()
 
 def outname = args[0].split('/')[-1]
 
-def processors = [new dvcs()]
+def processors = [new dvcs_debug()]
 
 def evcount = new AtomicInteger()
 def save = {
