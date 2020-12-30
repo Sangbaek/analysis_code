@@ -40,7 +40,7 @@ def evcount = new AtomicInteger()
 // }
 
 def exe = Executors.newScheduledThreadPool(1)
-exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
+// exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
   args.eachParallel{fname->

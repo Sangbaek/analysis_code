@@ -17,6 +17,9 @@ import org.jlab.clas.pdg.PDGDatabase
 
 class dvcs_debug{
 
+  //defining histograms
+  def hists = new ConcurrentHashMap()
+
   def electron_selector = new electron()
   def proton_selector = new proton()
   def gamma_selector = new gamma()
