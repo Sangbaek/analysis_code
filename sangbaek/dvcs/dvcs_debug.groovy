@@ -15,7 +15,15 @@ import run.Run
 import java.util.concurrent.ConcurrentHashMap
 import org.jlab.clas.pdg.PDGDatabase
 
-class dvcs{
+class dvcs_debug{
+
+  def electron_selector = new electron()
+  def proton_selector = new proton()
+  def gamma_selector = new gamma()
+  def beam = LorentzVector.withPID(11, 0, 0, 10.6)
+  def target = LorentzVector.withPID(2212, 0, 0, 0)
+  def M = PDGDatabase.getParticleMass(2212)
+  def Mpi0 = PDGDatabase.getParticleMass(111)
 
   def processEvent(event){
 
