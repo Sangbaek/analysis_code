@@ -371,7 +371,7 @@ class dvcs{
           hists.computeIfAbsent("/epg/yields/heli_$helicity/trento_pro_CD_gam_FT_xBQ2t_${xBQ2tbin}", h_cross_section).fill(TrentoAng2)
         }
 
-        if (DVCS.KineCuts_xcG(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>0.4)){
+        if (DVCS.KineCuts_xcG(xB, Q2, W, ele, gam, pro) || (event.mc_status && gam.e()>0.4)){
 
           hists.computeIfAbsent("/events/events", h_events).fill(3.5)  
 

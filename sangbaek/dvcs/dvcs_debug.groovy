@@ -50,7 +50,7 @@ class dvcs{
         def nu = KinTool.calcNu(beam, ele)
         def t2 = KinTool.calcT2(beam, ele, gam)
 
-        if (DVCS.KineCuts_xcG(xB, Q2, W, ele, gam) || (event.mc_status && gam.e()>0.4)){
+        if (DVCS.KineCuts_xcG(xB, Q2, W, ele, gam, pro) || (event.mc_status && gam.e()>0.4)){
 
           if (DVCS.ExclCuts_xcG(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
