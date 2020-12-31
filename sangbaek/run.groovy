@@ -11,7 +11,6 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import sangbaek.dvcs.dvcs_debug
 import sangbaek.dvcs.dvcs_corr
 import sangbaek.dvcs.dvcs_EB
 import sangbaek.dvcs.dvcs_EB_corr
@@ -24,7 +23,7 @@ Sugar.enable()
 
 def outname = args[0].split('/')[-1]
 
-def processors = [new dvcs_debug(), new dvcs_EB()]
+def processors = [new dvcs_EB()]
 
 def evcount = new AtomicInteger()
 def save = {
