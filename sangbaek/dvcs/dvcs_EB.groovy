@@ -479,6 +479,8 @@ class dvcs_EB{
 
           if (DVCS.ExclCuts_xcG(gam, ele, VMISS, VmissP, VmissG, Vhadr, Vhad2)){
 
+            println("debug1::dvcs detected")
+            println("debug2::run"+event.run_number+ "\t event "+event.event_number)
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
 
             def number_of_photons = (0..<event.npart).findAll{event.pid[it]==22}.size()
