@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import sangbaek.dvcs.dvcs_debug
 import sangbaek.dvcs.dvcs_corr
+import sangbaek.dvcs.dvcs_EB
 import sangbaek.dvcs.dvcs_EB_corr
 import event.Event
 import event.EventConverter
@@ -23,24 +24,24 @@ Sugar.enable()
 
 def outname = args[0].split('/')[-1]
 
-def processors = [new dvcs_debug()]
+def processors = [new dvcs_debug(), new dvcs_EB()]
 
 def evcount = new AtomicInteger()
-// def save = {
-//   processors.each{
-//     def out = new TDirectory()
-//     out.mkdir("/root")
-//     out.cd("/root")
-//     it.hists.each{out.writeDataSet(it.value)}
-//     def clasname = it.getClass().getSimpleName()
-//     out.writeFile("${clasname}.hipo")
-//   }
-//   // println "event count: "+evcount.get()
-//   evcount.set(0)
-// }
+def save = {
+  processors.each{
+    def out = new TDirectory()
+    out.mkdir("/root")
+    out.cd("/root")
+    it.hists.each{out.writeDataSet(it.value)}
+    def clasname = it.getClass().getSimpleName()
+    out.writeFile("${clasname}.hipo")
+  }
+  // println "event count: "+evcount.get()
+  evcount.set(0)
+}
 
 def exe = Executors.newScheduledThreadPool(1)
-// exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
+exe.scheduleWithFixedDelay(save, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
   args.eachParallel{fname->

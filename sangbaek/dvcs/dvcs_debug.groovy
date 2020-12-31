@@ -8,10 +8,6 @@ import exclusive.sangbaek.DVCS
 import utils.KinTool
 import event.Event
 import event.EventConverter
-import pid.sangbaek.electron
-import pid.sangbaek.proton
-import pid.sangbaek.gamma
-import run.Run
 import java.util.concurrent.ConcurrentHashMap
 import org.jlab.clas.pdg.PDGDatabase
 
@@ -33,7 +29,7 @@ class dvcs_debug{
     if (event.npart>0) {
 
       // get epg coincidence, no exclusive cut applied. electron cut from Brandon's package
-      def dsets = DVCS.getEPG(event, electron_selector, proton_selector, gamma_selector)
+      def dsets = DVCS.getEPG_EB(event)
       def (ele, pro, gam) = dsets*.particle.collect{it ? it.vector() : null} 
       // process only if there's a epg set in coincidence
       if(ele!=null) {
