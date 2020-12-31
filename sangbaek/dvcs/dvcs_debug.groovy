@@ -16,9 +16,6 @@ class dvcs_debug{
   //defining histograms
   def hists = new ConcurrentHashMap()
 
-  def electron_selector = new electron()
-  def proton_selector = new proton()
-  def gamma_selector = new gamma()
   def beam = LorentzVector.withPID(11, 0, 0, 10.6)
   def target = LorentzVector.withPID(2212, 0, 0, 0)
   def M = PDGDatabase.getParticleMass(2212)
