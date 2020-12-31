@@ -17,6 +17,8 @@ class dvcs_EB{
   //defining histograms
   def hists = new ConcurrentHashMap()
 
+  def eventCount = 0
+
   // missing mass
   def h_mm2 = {new H1F("$it", "$it", 1500, -2, 4)}
   def h_mm2_2 = {new H1F("$it", "$it", 100, -0.2, 0.2)}
@@ -482,8 +484,9 @@ class dvcs_EB{
             println("debug1::dvcs detected")
             println("debug2::run "+event.run_number)
             println("debug3::event "+event.event_number)
+            eventCount++
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
-
+            println(hists.computeIfAbsent("/events/events", h_events).getBinContent(4)+"\t"+ eventCount)
             def number_of_photons = (0..<event.npart).findAll{event.pid[it]==22}.size()
             hists.computeIfAbsent("/pi0/number_of_photons", h_events).fill(number_of_photons)
             if (number_of_photons>1){
