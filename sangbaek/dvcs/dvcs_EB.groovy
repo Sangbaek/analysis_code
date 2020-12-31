@@ -486,7 +486,7 @@ class dvcs_EB{
             println("debug3::event "+event.event_number)
             eventCount++
             hists.computeIfAbsent("/events/events", h_events).fill(4.5)  
-            println(hists.computeIfAbsent("/events/events", h_events).getBinContent(4)+"\t"+ eventCount)
+            println("debug4::"+hists.computeIfAbsent("/events/events", h_events).getBinContent(4)+"\t"+ eventCount)
             def number_of_photons = (0..<event.npart).findAll{event.pid[it]==22}.size()
             hists.computeIfAbsent("/pi0/number_of_photons", h_events).fill(number_of_photons)
             if (number_of_photons>1){
