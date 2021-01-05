@@ -37,7 +37,7 @@ def save = {
     def clasname = it.getClass().getSimpleName()
     out.writeFile("${clasname}.hipo")
   }
-  // println "event count: "+evcount.get()
+  println "event count: "+evcount.get()
   evcount.set(0)
 }
 
