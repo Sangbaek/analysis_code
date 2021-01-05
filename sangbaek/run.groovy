@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import sangbaek.dvcs.dvcs_corr
 import sangbaek.dvcs.dvcs_EB
 import sangbaek.dvcs.dvcs_EB_corr
+import sangbaek.pi0.pi0
 import event.Event
 import event.EventConverter
 import my.Sugar
@@ -23,7 +24,8 @@ Sugar.enable()
 
 def outname = args[0].split('/')[-1]
 
-def processors = [new dvcs_EB()]
+// def processors = [new dvcs_EB()]
+def processors = [new pi0()]
 
 def evcount = new AtomicInteger()
 def save = {
