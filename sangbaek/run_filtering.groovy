@@ -84,7 +84,7 @@ GParsPool.withPool 12, {
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
       def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
       def event = EventConverter.convert(data_event)
-      def partlist = processor.filterEPGs(event)
+      def partlist = processor.filterGammas(event)//filterEPGs(event)
 
       if (partlist) {
         dataSelector.getIterator(jnp_event, iter);

@@ -55,4 +55,14 @@ class filtering{
     return null
   }
 
+  def filterGammas(event){
+    if (event.npart>0) {
+      def gamma_candidates = gamma_selector.applyCuts_Stefan(event)
+      if (gamma_candidates) return [*gamma_candidates]
+      else return null
+    }
+    return null
+  }
+
+
 }
