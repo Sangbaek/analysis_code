@@ -58,7 +58,23 @@ class filtering{
   def filterGammas(event){
     if (event.npart>0) {
       def gamma_candidates = gamma_selector.applyCuts_Stefan(event)
-      if (gamma_candidates) return [*gamma_candidates]
+      def candidates = []
+      if (gamma_candidates.size()>1){
+        (0..<gamma_candidates.size()-1).each{ind1 ->
+          (ind1+1..<gamma_candidates.size()).each{ind2 ->
+            def pind1 = gamma_candidates[ind1]
+            def pind2 = gamma_candidates[ind2]
+            def gam1 = LorentzVector.withPID(22, event.px[pind1], event.py[pind1], event.pz[pind1])
+            def gam2 = LorentzVector.withPID(22, event.px[pind2], event.py[pind2], event.pz[pind2])
+            def pi0_candidates = gam1 + gam2
+            if (pi0_candidates.mass()>0.08 && pi0_candidates.mass()<0.2){
+              if(!candidates.contains(pind1)) candidates.add(pind1)
+              if(!candidates.contains(pind2)) candidates.add(pind2)
+            }
+          }
+        }
+      }
+      if (candidates)  return candidates
       else return null
     }
     return null
