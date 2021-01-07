@@ -35,10 +35,10 @@ class pi0{
           def status1 = event.status[ind1]
           def status2 = event.status[ind2]
           def pi0 = gam1 + gam2
-          def coneAngle = KinTool.Vangle(gam1, gam2)
+          def coneAngle = KinTool.Vangle(gam1.vect(), gam2.vect())
           def pi0_mass = pi0.mass()
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
-            hists.computeIfAbsent("pi0_mass_$status1_$status2",h_inv_mass_gg).fill(pi0_mass)
+            hists.computeIfAbsent("pi0_mass_$status1"+"_$status2",h_inv_mass_gg).fill(pi0_mass)
           }
 
         }
