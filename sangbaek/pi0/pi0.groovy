@@ -47,9 +47,9 @@ class pi0{
           def coneAngle = KinTool.Vangle(gam1.vect(), gam2.vect())
           def pi0_mass = pi0.mass()
 
-          def maxE = max(gam1.e(), gam1.e())
-          def minE = max(gam1.e(), gam1.e())
-
+          def maxE = Math.max(gam1.e(), gam1.e())
+          def minE = Math.min(gam1.e(), gam1.e())
+          
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e() > 3 && maxE > 2 && minE > 0.8){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
             hists.computeIfAbsent("status", h_events).fill(status)
