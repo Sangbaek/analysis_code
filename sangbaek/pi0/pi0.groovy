@@ -47,16 +47,17 @@ class pi0{
           def coneAngle = KinTool.Vangle(gam1.vect(), gam2.vect())
           def pi0_mass = pi0.mass()
 
-          if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
+          def maxE = max(gam1.e(), gam1.e())
+          def minE = max(gam1.e(), gam1.e())
+
+          if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e() > 3 && maxE > 2 && minE > 0.8){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
             hists.computeIfAbsent("status", h_events).fill(status)
             //trust gam1 and to correct gam2 in FT
-            if (status==2){
-              hists.computeIfAbsent("corrRatio", h_corrRatio).fill(Mpi0/pi0_mass)
-              hists.computeIfAbsent("corrDiff", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
-              hists.computeIfAbsent("corrRatio_gamE", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
-              hists.computeIfAbsent("corrDiff_gamE", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
-            }
+            hists.computeIfAbsent("corrRatio_$status", h_corrRatio).fill(Mpi0/pi0_mass)
+            hists.computeIfAbsent("corrDiff_$status", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
+            hists.computeIfAbsent("corrRatio_gamE_$status", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
+            hists.computeIfAbsent("corrDiff_gamE_$status", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
           }
         }
       }
