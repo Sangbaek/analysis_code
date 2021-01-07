@@ -32,13 +32,14 @@ class pi0{
         (ind1+1..<event.npart).each{ind2 ->
           def gam1 = LorentzVector.withPID(22, event.px[ind1], event.py[ind1], event.pz[ind1])
           def gam2 = LorentzVector.withPID(22, event.px[ind2], event.py[ind2], event.pz[ind2])
-          def status1 = event.status[ind1]
-          def status2 = event.status[ind2]
+          def status1 = event.status[ind1].intdiv(1000)
+          def status2 = event.status[ind2].intdiv(1000)
+          def status = status1*status2
           def pi0 = gam1 + gam2
           def coneAngle = KinTool.Vangle(gam1.vect(), gam2.vect())
           def pi0_mass = pi0.mass()
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
-            hists.computeIfAbsent("pi0_mass_$status1"+"_$status2",h_inv_mass_gg).fill(pi0_mass)
+            hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
           }
 
         }
