@@ -19,6 +19,7 @@ class pi0{
   def h_corrDiff = {new H2F("$it", "$it", 100, -1, 1)}
   def h_corrRatio_gamE = {new H2F("$it", "$it", 10, 0.5, 5.5, 100, 0.5, 1.5)}
   def h_corrDiff_gamE = {new H2F("$it", "$it", 10, 0.5, 5.5, 100, -1, 1)}
+  def h_events = {new H1F("$it","$it",5, 0,5)}
 
   def beam = LorentzVector.withPID(11, 0, 0, 10.6)
   def target = LorentzVector.withPID(2212, 0, 0, 0)
@@ -48,6 +49,7 @@ class pi0{
 
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
+            hists.computeIfAbsent("status", h_events).fill(status)
             //trust gam1 and to correct gam2 in FT
             if (status==2){
               hists.computeIfAbsent("corrRatio", h_corrRatio).fill(Mpi0/pi0_mass)
