@@ -15,6 +15,7 @@ class pi0{
   //defining histograms
   def hists = new ConcurrentHashMap()
   def h_inv_mass_gg = {new H1F("$it", "$it", 100, 0.08, 0.2)}
+  def h_correction = {new H1F("$it", "$it", 100, -2, 2)}
 
   def beam = LorentzVector.withPID(11, 0, 0, 10.6)
   def target = LorentzVector.withPID(2212, 0, 0, 0)
@@ -34,12 +35,19 @@ class pi0{
           def gam2 = LorentzVector.withPID(22, event.px[ind2], event.py[ind2], event.pz[ind2])
           def status1 = event.status[ind1].intdiv(1000)
           def status2 = event.status[ind2].intdiv(1000)
-          def status = status1*status2
+          if (status2>status1){ // allow only (11), (21), (22)
+            (gam1, gam2, status1, status2) = [gam2, gam1, status2, status1]
+          }
+          def status = status1 * status2
           def pi0 = gam1 + gam2
           def coneAngle = KinTool.Vangle(gam1.vect(), gam2.vect())
           def pi0_mass = pi0.mass()
+
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
+            //trust gam1 and to correct gam2 in FT
+            hists.computeIfAbsent("correction", h_correction).fill(Mpi0*pi0_mass)
+            hists.computeIfAbsent("difference_of_energy", h_correction).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
           }
 
         }
