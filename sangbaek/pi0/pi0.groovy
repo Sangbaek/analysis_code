@@ -15,7 +15,10 @@ class pi0{
   //defining histograms
   def hists = new ConcurrentHashMap()
   def h_inv_mass_gg = {new H1F("$it", "$it", 100, 0.08, 0.2)}
-  def h_correction = {new H1F("$it", "$it", 100, -2, 2)}
+  def h_corrRatio = {new H2F("$it", "$it", 100, 0.5, 1.5)}
+  def h_corrDiff = {new H2F("$it", "$it", 100, -1, 1)}
+  def h_corrRatio_gamE = {new H2F("$it", "$it", 10, 0.5, 5.5, 100, 0.5, 1.5)}
+  def h_corrDiff_gamE = {new H2F("$it", "$it", 10, 0.5, 5.5, 100, -1, 1)}
 
   def beam = LorentzVector.withPID(11, 0, 0, 10.6)
   def target = LorentzVector.withPID(2212, 0, 0, 0)
@@ -46,10 +49,13 @@ class pi0{
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
             //trust gam1 and to correct gam2 in FT
-            hists.computeIfAbsent("correction", h_correction).fill(Mpi0/pi0_mass)
-            hists.computeIfAbsent("difference_of_energy", h_correction).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
+            if (status==2){
+              hists.computeIfAbsent("corrRatio", h_corrRatio).fill(Mpi0/pi0_mass)
+              hists.computeIfAbsent("corrDiff", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
+              hists.computeIfAbsent("corrRatio_gamE", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
+              hists.computeIfAbsent("corrDiff_gamE", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
+            }
           }
-
         }
       }
     }
