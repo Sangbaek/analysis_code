@@ -55,15 +55,17 @@ class pi0{
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e() > 3 && maxE > 2 && minE > 0.8){
             hists.computeIfAbsent("pi0_mass_$status1"+"_$status2",h_inv_mass_gg).fill(pi0_mass)
             hists.computeIfAbsent("status", h_events).fill(status)
-            //trust gam1 and to correct gam2 in FT
-            hists.computeIfAbsent("corrRatio_$status1"+"_$status2", h_corrRatio).fill(Mpi0/pi0_mass)
-            hists.computeIfAbsent("corrDiff_$status1"+"_$status2", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
-            hists.computeIfAbsent("corrRatio_maxE_$status1"+"_$status2", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
-            hists.computeIfAbsent("corrDiff_maxE_$status1"+"_$status2", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
-            hists.computeIfAbsent("corrRatio_minE_$status1"+"_$status2", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
-            hists.computeIfAbsent("corrDiff_minE_$status1"+"_$status2", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
-            hists.computeIfAbsent("corrRatio_maxEminE_$status1"+"_$status2", h_maxEminE).fill(minE, maxE, (Mpi0/pi0_mass))
-            hists.computeIfAbsent("maxEminE_$status1"+"_$status2", h_maxEminE).fill(minE, maxE)
+            //trust FT and to correct gam2 in FD
+            if (status<3){
+              hists.computeIfAbsent("corrRatio_$status1"+"_$status2", h_corrRatio).fill(Mpi0/pi0_mass)
+              hists.computeIfAbsent("corrDiff_$status1"+"_$status2", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam1.e())
+              hists.computeIfAbsent("corrRatio_maxE_$status1"+"_$status2", h_corrRatio_gamE).fill(gam1.e(), Mpi0/pi0_mass)
+              hists.computeIfAbsent("corrDiff_maxE_$status1"+"_$status2", h_corrDiff_gamE).fill(gam1.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam1.e())
+              hists.computeIfAbsent("corrRatio_minE_$status1"+"_$status2", h_corrRatio_gamE).fill(gam1.e(), Mpi0/pi0_mass)
+              hists.computeIfAbsent("corrDiff_minE_$status1"+"_$status2", h_corrDiff_gamE).fill(gam1.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam1.e())
+              hists.computeIfAbsent("corrRatio_maxEminE_$status1"+"_$status2", h_maxEminE).fill(minE, maxE, (Mpi0/pi0_mass))
+              hists.computeIfAbsent("maxEminE_$status1"+"_$status2", h_maxEminE).fill(minE, maxE)
+            }
           }
         }
       }
