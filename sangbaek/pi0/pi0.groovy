@@ -15,8 +15,8 @@ class pi0{
   //defining histograms
   def hists = new ConcurrentHashMap()
   def h_inv_mass_gg = {new H1F("$it", "$it", 100, 0.08, 0.2)}
-  def h_corrRatio = {new H2F("$it", "$it", 100, 0.5, 1.5)}
-  def h_corrDiff = {new H2F("$it", "$it", 100, -1, 1)}
+  def h_corrRatio = {new H1F("$it", "$it", 100, 0.5, 1.5)}
+  def h_corrDiff = {new H1F("$it", "$it", 100, -1, 1)}
   def h_corrRatio_gamE = {new H2F("$it", "$it", 10, 0.5, 5.5, 100, 0.5, 1.5)}
   def h_corrDiff_gamE = {new H2F("$it", "$it", 10, 0.5, 5.5, 100, -1, 1)}
   def h_events = {new H1F("$it","$it",5, 0,5)}
