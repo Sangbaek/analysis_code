@@ -37,27 +37,27 @@ class pi0{
         (ind1+1..<event.npart).each{ind2 ->
           def gam1 = LorentzVector.withPID(22, event.px[ind1], event.py[ind1], event.pz[ind1])
           def gam2 = LorentzVector.withPID(22, event.px[ind2], event.py[ind2], event.pz[ind2])
-          def status1 = event.status[ind1].intdiv(1000)
-          def status2 = event.status[ind2].intdiv(1000)
+          def status1 = event.status[ind1]
+          def status2 = event.status[ind2]
           if (status2>status1){ // allow only (11), (21), (22)
             (gam1, gam2, status1, status2) = [gam2, gam1, status2, status1]
           }
-          def status = status1 * status2
+          def status = status1.intdiv(1000) * status2.intdiv(1000)
           def pi0 = gam1 + gam2
           def coneAngle = KinTool.Vangle(gam1.vect(), gam2.vect())
           def pi0_mass = pi0.mass()
 
           def maxE = Math.max(gam1.e(), gam1.e())
           def minE = Math.min(gam1.e(), gam1.e())
-          
+
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e() > 3 && maxE > 2 && minE > 0.8){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
             hists.computeIfAbsent("status", h_events).fill(status)
             //trust gam1 and to correct gam2 in FT
-            hists.computeIfAbsent("corrRatio_$status", h_corrRatio).fill(Mpi0/pi0_mass)
-            hists.computeIfAbsent("corrDiff_$status", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
-            hists.computeIfAbsent("corrRatio_gamE_$status", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
-            hists.computeIfAbsent("corrDiff_gamE_$status", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
+            hists.computeIfAbsent("corrRatio_$status"+"_$status2", h_corrRatio).fill(Mpi0/pi0_mass)
+            hists.computeIfAbsent("corrDiff_$status"+"_$status2", h_corrDiff).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
+            hists.computeIfAbsent("corrRatio_gamE_$status"+"_$status2", h_corrRatio_gamE).fill(gam2.e(), Mpi0/pi0_mass)
+            hists.computeIfAbsent("corrDiff_gamE_$status"+"_$status2", h_corrDiff_gamE).fill(gam2.e(), (Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
           }
         }
       }
