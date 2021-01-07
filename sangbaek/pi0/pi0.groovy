@@ -46,7 +46,7 @@ class pi0{
           if (pi0_mass>0.08 && pi0_mass<0.2 && pi0.e()>3 && (gam1.e()>2 || gam2.e()>2)){
             hists.computeIfAbsent("pi0_mass_$status",h_inv_mass_gg).fill(pi0_mass)
             //trust gam1 and to correct gam2 in FT
-            hists.computeIfAbsent("correction", h_correction).fill(Mpi0*pi0_mass)
+            hists.computeIfAbsent("correction", h_correction).fill(Mpi0/pi0_mass)
             hists.computeIfAbsent("difference_of_energy", h_correction).fill((Mpi0*Mpi0/pi0_mass/pi0_mass-1)*gam2.e())
           }
 
