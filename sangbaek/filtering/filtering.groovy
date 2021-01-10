@@ -66,8 +66,8 @@ class filtering{
             def pind2 = gamma_candidates[ind2]
             def gam1 = LorentzVector.withPID(22, event.px[pind1], event.py[pind1], event.pz[pind1])
             def gam2 = LorentzVector.withPID(22, event.px[pind2], event.py[pind2], event.pz[pind2])
-            def pi0_candidates = gam1 + gam2
-            if (pi0_candidates.mass()>0.08 && pi0_candidates.mass()<0.2){
+            def pi0_candidate = gam1 + gam2
+            if (pi0_candidate.mass()>0.08 && pi0_candidate.mass()<0.2){
               if(!candidates.contains(pind1)) candidates.add(pind1)
               if(!candidates.contains(pind2)) candidates.add(pind2)
             }

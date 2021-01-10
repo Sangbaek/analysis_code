@@ -67,36 +67,50 @@ GParsPool.withPool 12, {
     reader.open(fname)
     SchemaFactory schema = reader.getSchemaFactory();
 //    def writer = new HipoWriter(schema)
-    SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
+    SchemaFactory writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "RUN::config", "REC::Event"]);
     writerFactory.addSchema(customSchema)
     def writer = new HipoWriter(writerFactory)
 
     writer.open(outname)
 
-    BankIterator           iter = new BankIterator(4096);
-    BankSelector   dataSelector = new BankSelector(schema.getSchema("REC::Particle"));
+    BankIterator           iterPart = new BankIterator(4096);
+    BankSelector   dataSelectorPart = new BankSelector(schema.getSchema("REC::Particle"));
+    BankIterator           iterScin = new BankIterator(4096);
+    BankSelector   dataSelectorScin = new BankSelector(schema.getSchema("REC::Scintillator"));
 
     def jnp_event = new org.jlab.jnp.hipo4.data.Event()
 
-    while(reader.hasNext()) {
+    while(reader.hasNext() && evcount.get() < 1000) {
       evcount.getAndIncrement()
       reader.nextEvent(jnp_event)
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
       def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
       def event = EventConverter.convert(data_event)
-      def partlist = processor.filterGammas(event)//filterEPGs(event)
-
-      if (partlist) {
-        dataSelector.getIterator(jnp_event, iter);
-        iter.reset()
-        def customBank = new Bank(customSchema, partlist.size)
-        partlist.eachWithIndex{val, index ->
-          iter.addIndex(val)
+      def partList = processor.filterEPGs(event)// get columns of REC::Particle to be saved
+      //saves only such columns
+      if (partList) {
+        dataSelectorPart.getIterator(jnp_event, iterPart);
+        dataSelectorScin.getIterator(jnp_event, iterScin);
+        iterPart.reset()
+        iterScin.reset()
+        def customBank = new Bank(customSchema, partList.size)
+        partList.eachWithIndex{val, index ->
+          iterPart.addIndex(val)
           customBank.putInt("before", index, val)
         }
-        Bank newBank = BankSelector.reduceBank(dataSelector.getBank(), iter);
-        jnp_event.remove(dataSelector.getBank().getSchema());
-        jnp_event.write(newBank);
+        Bank recScinBank = dataSelectorScin.getBank()
+        if (recScinBank.getRows()>0){
+          (0..<recScinBank.getRows()).each{
+            def pindex = recScinBank.getInt("pindex", it)
+            if (partList.contains(pindex)) iterScin.addIndex(it)
+          }
+        }
+        Bank newPartBank = BankSelector.reduceBank(dataSelectorPart.getBank(), iterPart);
+        Bank newScinScin = BankSelector.reduceBank(recScinBank, iterScin);
+        jnp_event.remove(dataSelectorPart.getBank().getSchema());
+        jnp_event.remove(dataSelectorScin.getBank().getSchema());
+        jnp_event.write(newPartBank);
+        jnp_event.write(newScinScin);
         jnp_event.write(customBank)
         writer.addEvent(jnp_event)
       }
