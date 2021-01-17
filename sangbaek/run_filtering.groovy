@@ -102,12 +102,15 @@ GParsPool.withPool 12, {
           }
         }
         Bank newPartBank = BankSelector.reduceBank(dataSelectorPart.getBank(), iterPart);
-        Bank newScinScin = BankSelector.reduceBank(recScinBank, iterScin);
         jnp_event.remove(dataSelectorPart.getBank().getSchema());
-        jnp_event.remove(dataSelectorScin.getBank().getSchema());
-        jnp_event.write(newPartBank);
-        jnp_event.write(newScinScin);
-        jnp_event.write(customBank)
+        jnp_event.write(newPartBank); // REC::Particle only passed filtering.filterEPGs
+
+        jnp_event.write(customBank)//FILTER::Index bank
+
+        // //uncomment these three if TOF banks are needed.
+        // Bank newScinScin = BankSelector.reduceBank(recScinBank, iterScin);
+        // jnp_event.remove(dataSelectorScin.getBank().getSchema());
+        // jnp_event.write(newScinScin);
         writer.addEvent(jnp_event)
       }
     }
