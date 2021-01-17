@@ -42,7 +42,7 @@ if (outname[-5..-1]!=".hipo"){
   return
 }
 println("Filtering $outname..")
-outname = outname.substring(0,outname.lastIndexOf(".")) + "_filtered.hipo"
+outname = outname.substring(0,outname.lastIndexOf(".")) + "_filtered_with_TOF.hipo"
 println("Saving filtered file as $outname...\n\n\n")
 
 def processor = new filtering()
