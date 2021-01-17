@@ -20,10 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger
 import sangbaek.filtering.filtering
 import event.Event
 import event.EventConverter
-import my.Sugar
-
-Sugar.enable()
-/////////////////////////////////////////////////////////////////////
 
 def jsonbank = '''
     {   
