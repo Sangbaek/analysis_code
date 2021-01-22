@@ -89,9 +89,9 @@ GParsPool.withPool 12, {
       if (partList) {
         dataSelectorPart.getIterator(jnp_event, iterPart);
         iterPart.reset()
-        dataSelectorScin.getIterator(jnp_event, iterScin);
 
         // preparing for REC::Scintillator filtering
+        dataSelectorScin.getIterator(jnp_event, iterScin);
         iterScin.reset()
         def customBank = new Bank(customSchema, partList.size)
 
