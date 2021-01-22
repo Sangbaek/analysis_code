@@ -93,6 +93,8 @@ GParsPool.withPool 12, {
         // preparing for REC::Scintillator filtering
         dataSelectorScin.getIterator(jnp_event, iterScin);
         iterScin.reset()
+        
+        // preparing for FILTER::Index
         def customBank = new Bank(customSchema, partList.size)
 
         //filtering REC::Particle
