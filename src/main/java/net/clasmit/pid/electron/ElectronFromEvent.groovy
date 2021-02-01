@@ -1,7 +1,7 @@
-package pid.electron
+package net.clasmit.pid.electron
 
 import org.jlab.detector.base.DetectorType
-import event.Event
+import net.clasmit.event.Event
 
 class ElectronFromEvent {
 

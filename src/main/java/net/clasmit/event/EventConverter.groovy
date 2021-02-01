@@ -1,10 +1,10 @@
-package event
+package net.clasmit.event
 import org.jlab.detector.base.DetectorType
 import org.jlab.io.hipo.HipoDataEvent
-import event.Event
-import event.DCHit
-import event.FtofHit
-import event.ECHit
+import net.clasmit.event.Event
+import net.clasmit.event.DCHit
+import net.clasmit.event.FtofHit
+import net.clasmit.event.ECHit
 
 class EventConverter {
 

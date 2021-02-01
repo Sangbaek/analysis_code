@@ -1,7 +1,7 @@
-package pid.gamma
+package net.clasmit.pid.gamma
 
 import org.jlab.detector.base.DetectorType
-import event.Event
+import net.clasmit.event.Event
 
 class GammaFromEvent {
 

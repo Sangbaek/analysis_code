@@ -1,9 +1,9 @@
-package pid.sangbaek
+package net.clasmit.pid.sangbaek
 
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
-import pid.proton.ProtonFromEvent
-import event.Event
+import net.clasmit.pid.proton.ProtonFromEvent
+import net.clasmit.event.Event
 import org.jlab.clas.physics.Vector3
 
 class proton{

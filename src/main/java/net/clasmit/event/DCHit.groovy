@@ -1,4 +1,4 @@
-package event
+package net.clasmit.event
 
 class DCHit {
     Float x, y, z

@@ -1,10 +1,9 @@
-package pid.sangbaek
+package net.clasmit.pid.sangbaek
 
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
-import pid.electron.ElectronFromEvent
-import pid.electron.ElectronSelector
-import event.Event
+import net.clasmit.pid.electron.ElectronFromEvent
+import net.clasmit.event.Event
 import org.jlab.clas.physics.Vector3
 
 class electron{
@@ -12,7 +11,6 @@ class electron{
   def event
 
   def electron_candidate = new ElectronFromEvent()
-  // def electron_selector = new ElectronSelector()
   def electronCutStrategies_Brandon
   def electronCutStrategies_Custom
 

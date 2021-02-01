@@ -1,9 +1,9 @@
-package event
+package net.clasmit.event
 import org.jlab.detector.base.DetectorType
-import event.DCHit
-import event.FtofHit
-import event.ECHit
-import event.CovarianceMatrix
+import net.clasmit.event.DCHit
+import net.clasmit.event.FtofHit
+import net.clasmit.event.ECHit
+import net.clasmit.event.CovarianceMatrix
 
 class Event {
 

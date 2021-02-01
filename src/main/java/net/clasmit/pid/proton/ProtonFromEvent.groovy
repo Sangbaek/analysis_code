@@ -1,8 +1,8 @@
-package pid.proton
+package net.clasmit.pid.proton
 
 import org.jlab.detector.base.DetectorType
 import org.jlab.clas.physics.Particle
-import event.Event
+import net.clasmit.event.Event
 
 class ProtonFromEvent {
 

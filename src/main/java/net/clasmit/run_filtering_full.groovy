@@ -1,4 +1,6 @@
-import org.jlab.jnp.hipo4.data.Event;
+package net.clasmit;
+
+// import org.jlab.jnp.hipo4.data.Event;
 import org.jlab.jnp.hipo4.data.Bank;
 import org.jlab.jnp.hipo4.io.HipoReader
 import org.jlab.jnp.hipo4.io.HipoWriter
@@ -17,9 +19,9 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
-import sangbaek.filtering.filtering
-import event.Event
-import event.EventConverter
+import net.clasmit.filtering.filtering
+import net.clasmit.event.Event
+import net.clasmit.event.EventConverter
 
 def jsonbank = '''
     {   

@@ -1,4 +1,4 @@
-package event
+package net.clasmit.event
 
 class FtofHit {
     Short sector, paddle, layer
