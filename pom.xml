@@ -11,8 +11,11 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.6.0</version>
         <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
           <compilerId>groovy-eclipse-compiler</compilerId>
         </configuration>
         <dependencies>
@@ -42,9 +45,15 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-      <version>2.4.3</version>      
+      <version>3.0.3</version>
+      <type>pom</type>
+    <exclusions>
+        <exclusion>
+            <artifactId>tools</artifactId>
+            <groupId>com.sun</groupId>
+        </exclusion>
+    </exclusions>  
     </dependency>
-
 
 <!-- https://mvnrepository.com/artifact/org.codehaus.gpars/gpars -->
     <dependency>
@@ -52,7 +61,6 @@
       <artifactId>gpars</artifactId>
       <version>1.1.0</version>      
     </dependency>
-
 
       <dependency>
       <groupId>org.jlab.coat</groupId>
@@ -68,5 +76,6 @@
       <url>https://clasweb.jlab.org/clas12maven</url>
     </repository>
   </repositories>
+
 
 </project>
