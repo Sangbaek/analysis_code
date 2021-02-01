@@ -7,24 +7,24 @@ import org.jlab.groot.data.H2F
 import net.clasmit.utils.KinTool
 import net.clasmit.event.Event
 import net.clasmit.event.EventConverter
-import net.clasmit.pid.sangbaek.electron
-import net.clasmit.pid.sangbaek.proton
-import net.clasmit.pid.sangbaek.gamma
+import net.clasmit.pid.electron.ElectronSelector
+import net.clasmit.pid.proton.ProtonSelector
+import net.clasmit.pid.gamma.GammaSelector
 import java.util.concurrent.ConcurrentHashMap
 import org.jlab.clas.pdg.PDGDatabase
 
 class filtering{
 
-  def electron_selector = new electron()
-  def proton_selector = new proton()
-  def gamma_selector = new gamma()
+  def electron_selector = new ElectronSelector()
+  def proton_selector = new ProtonSelector()
+  def gamma_selector = new GammaSelector()
 
   def filterDVCSEvents(event){
 
     if (event.npart>0) {
-      def electron_candidate = electron_selector.applyCuts_Brandon(event)
-      def proton_candidate = proton_selector.applyCuts_Stefan(event)
-      def gamma_candidate = gamma_selector.applyCuts_Stefan(event)
+      def electron_candidate = electron_selector.applyCuts(event)
+      def proton_candidate = proton_selector.applyCuts(event)
+      def gamma_candidate = gamma_selector.applyCuts(event)
       if (electron_candidate.size()*proton_candidate.size()*gamma_candidate.size()) return true
       else return false
     }
@@ -34,9 +34,9 @@ class filtering{
   def filterPi0Events(event){
 
     if (event.npart>0) {
-      def electron_candidate = electron_selector.applyCuts_Brandon(event)
-      def proton_candidate = proton_selector.applyCuts_Stefan(event)
-      def gamma_candidate = gamma_selector.applyCuts_Stefan(event)
+      def electron_candidate = electron_selector.applyCuts(event)
+      def proton_candidate = proton_selector.applyCuts(event)
+      def gamma_candidate = gamma_selector.applyCuts(event)
       if (electron_candidate.size()*proton_candidate.size()*gamma_candidate.size() && gamma_candidate.size()>1) return true
       else return false
     }
@@ -45,9 +45,9 @@ class filtering{
 
   def filterEPGs(event){
     if (event.npart>0) {
-      def electron_candidates = electron_selector.applyCuts_Brandon(event)
-      def proton_candidates = proton_selector.applyCuts_Stefan(event)
-      def gamma_candidates = gamma_selector.applyCuts_Stefan(event)
+      def electron_candidates = electron_selector.applyCuts(event)
+      def proton_candidates = proton_selector.applyCuts(event)
+      def gamma_candidates = gamma_selector.applyCuts(event)
       if (electron_candidates&&proton_candidates&&gamma_candidates) return [*electron_candidates, *proton_candidates, *gamma_candidates]
       else return null
     }
@@ -56,7 +56,7 @@ class filtering{
 
   def filterGammas(event){
     if (event.npart>0) {
-      def gamma_candidates = gamma_selector.applyCuts_Stefan(event)
+      def gamma_candidates = gamma_selector.applyCuts(event)
       def candidates = []
       if (gamma_candidates.size()>1){
         (0..<gamma_candidates.size()-1).each{ind1 ->
