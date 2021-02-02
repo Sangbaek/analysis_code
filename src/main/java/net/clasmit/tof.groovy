@@ -19,9 +19,27 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import groovy.cli.picocli.CliBuilder
 import net.clasmit.filtering.filtering
 import net.clasmit.event.Event
 import net.clasmit.event.EventConverter
+
+def cli = new CliBuilder(usage: 'java -jar target/filter-1.1.jar -[p] polarity file_names')
+
+cli.with {
+    h longOpt: 'help', 'Show usage information'
+    p longOpt: 'polarity',        defaultValue:'inbending', args: 1, argName: 'polarity',        'inbending| outbending, default is inbending'
+}
+
+def options = cli.parse(args)
+if (options.h) {
+  cli.usage()
+  return
+}
+def fnames = options.arguments()
+def polarity = options.p
+
+println("filtering with "+polarity+" polarity option.")
 
 def jsonbank = '''
     {   
@@ -36,7 +54,7 @@ def jsonbank = '''
 '''
 def customSchema = Schema.fromJsonString(jsonbank)
 
-def outname = args[0].split('/')[-1]
+def outname = fnames[0].split('/')[-1]
 
 if (outname[-5..-1]!=".hipo"){
   println("The input file name must end with \".hipo\".")
@@ -59,7 +77,7 @@ def exe = Executors.newScheduledThreadPool(1)
 exe.scheduleWithFixedDelay(debug, 5, 30, TimeUnit.SECONDS)
 
 GParsPool.withPool 12, {
-  args.eachParallel{fname->
+  fnames.eachParallel{fname->
 
     def reader = new HipoReader()
     reader.open(fname)

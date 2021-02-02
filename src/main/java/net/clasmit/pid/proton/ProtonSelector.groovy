@@ -12,42 +12,41 @@ class ProtonSelector{
   def proton_candidate = new ProtonFromEvent()
   def protonCutStrategies
   def protonCutResults
+  def field_setting = "inbending"
 
   def ProtonSelector(){
-    this.initalizeCustomProCuts()
+    initalizeCustomProCuts()
   }
 
-  def ProtonSelector(event){
-    this.event = event
-    this.initalizeCustomProCuts()
-    this.getGoodProton(event)
-    this.getGoodProtonCustom(event)
+  def ProtonSelector(polarity){
+    field_setting = polarity
+    initalizeCustomProCuts()
   }
+
 
   def applyCuts(event){
-    this.getGoodProton(event)
-    return this.protonCutResults
+    getGoodProton(event)
+    return protonCutResults
   }
 
   def initalizeCustomProCuts(){
-    this.protonCutStrategies = [
-      this.proton_candidate.passProtonEBPIDCut,
-      this.proton_candidate.passProtonDCR1,
-      this.proton_candidate.passProtonDCR2,
-      this.proton_candidate.passProtonDCR3,
-      this.proton_candidate.passProtonTrackQuality,
-      this.proton_candidate.passProtonCDPolarAngleCut,
-      this.proton_candidate.passProtonVertexCut
+    protonCutStrategies = [
+      proton_candidate.passProtonEBPIDCut,
+      proton_candidate.passProtonDCR1,
+      proton_candidate.passProtonDCR2,
+      proton_candidate.passProtonDCR3,
+      proton_candidate.passProtonTrackQuality,
+      proton_candidate.passProtonCDPolarAngleCut,
+      proton_candidate.passProtonVertexCut
     ]
 
-    def field_setting = "inbending"
-    this.proton_candidate.setProtonCutParameters(field_setting)
+    proton_candidate.setProtonCutParameters(field_setting)
 
   }
 
   def getGoodProton(event){
     //return a list of REC::Particle indices for tracks passing all proton cuts
-    def pro_cut_result = (0..<event.npart).findAll{event.charge[it]>0}.collect{ ii -> [ii, this.protonCutStrategies.collect{ el_test -> el_test(event,ii) } ] }.collectEntries()
-    this.protonCutResults = pro_cut_result.findResults{el_indx, cut_result -> !cut_result.contains(false) ? el_indx : null}
+    def pro_cut_result = (0..<event.npart).findAll{event.charge[it]>0}.collect{ ii -> [ii, protonCutStrategies.collect{ el_test -> el_test(event,ii) } ] }.collectEntries()
+    protonCutResults = pro_cut_result.findResults{el_indx, cut_result -> !cut_result.contains(false) ? el_indx : null}
   }
 }

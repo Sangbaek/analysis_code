@@ -15,32 +15,25 @@ class GammaSelector{
   def gammaCutResults
 
   def GammaSelector(){
-    this.initalizeCustomGamCuts()
-  }
-
-  def GammaSelector(event){
-    this.event = event
-    this.initalizeCustomGamCuts()
-    this.getGoodGamma(event)
-    this.getGoodGammaCustom(event)
+    initalizeCustomGamCuts()
   }
 
   def applyCuts(event){
-    this.getGoodGamma(event)
-    return this.gammaCutResults
+    getGoodGamma(event)
+    return gammaCutResults
   }
 
   def initalizeCustomGamCuts(){
-    this.gammaCutStrategies = [
-      this.gamma_candidate.passGammaEBPIDCut,
-      this.gamma_candidate.passGammaPCALFiducialCut,
-      this.gamma_candidate.passGammaBetaCut
+    gammaCutStrategies = [
+      gamma_candidate.passGammaEBPIDCut,
+      gamma_candidate.passGammaPCALFiducialCut,
+      gamma_candidate.passGammaBetaCut
     ]
   }
 
   def getGoodGamma(event){
     //return a list of REC::Particle indices for tracks passing all gamma cuts
-    def gam_cut_result = (0..<event.npart).findAll{event.charge[it]==0}.collect{ ii -> [ii, this.gammaCutStrategies.collect{ gam_test -> gam_test(event,ii) } ] }.collectEntries()
-    this.gammaCutResults = gam_cut_result.findResults{gam_indx, cut_result -> !cut_result.contains(false) ? gam_indx : null}
+    def gam_cut_result = (0..<event.npart).findAll{event.charge[it]==0}.collect{ ii -> [ii, gammaCutStrategies.collect{ gam_test -> gam_test(event,ii) } ] }.collectEntries()
+    gammaCutResults = gam_cut_result.findResults{gam_indx, cut_result -> !cut_result.contains(false) ? gam_indx : null}
   }
 }

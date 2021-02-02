@@ -15,9 +15,21 @@ import org.jlab.clas.pdg.PDGDatabase
 
 class filtering{
 
-  def electron_selector = new ElectronSelector()
-  def proton_selector = new ProtonSelector()
+  def polarity = "inbending"
+  def electron_selector
+  def proton_selector
   def gamma_selector = new GammaSelector()
+
+  def filtering(){
+    electron_selector = new ElectronSelector()
+    proton_selector = new ProtonSelector()
+  }
+
+  def filtering(polar){
+    polarity = polar
+    electron_selector = new ElectronSelector(polarity)
+    proton_selector = new ProtonSelector(polarity)
+  }
 
   def filterDVCSEvents(event){
 
