@@ -67,12 +67,17 @@ class filtering{
     return false
   }
 
-  def filterEPGs(event){
+  def filterEPGs(event, requirePi0){
     if (event.npart>0) {
       def electron_candidates = electron_selector.applyCuts(event)
       def proton_candidates = proton_selector.applyCuts(event)
       def gamma_candidates = gamma_selector.applyCuts(event)
-      if (electron_candidates&&proton_candidates&&gamma_candidates){
+      def epgCondition = electron_candidates&&proton_candidates&&gamma_candidates
+      def epggCondition = epgCondition && gamma_candidates.size()>1
+      def filterCondition
+      if (requirePi0) filterCondition = epggCondition
+      else filterCondition = epgCondition
+      if (filterCondition){
 
         def pinds = [*electron_candidates, *proton_candidates, *gamma_candidates]
 
