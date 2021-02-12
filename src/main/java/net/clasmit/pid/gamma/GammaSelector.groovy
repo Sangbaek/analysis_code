@@ -25,7 +25,7 @@ class GammaSelector{
 
   def initalizeCustomGamCuts(){
     gammaCutStrategies = [
-      gamma_candidate.passGammaEBPIDCut,
+      // gamma_candidate.passGammaEBPIDCut,
       gamma_candidate.passGammaPCALFiducialCut,
       gamma_candidate.passGammaBetaCut
     ]
@@ -33,7 +33,7 @@ class GammaSelector{
 
   def getGoodGamma(event){
     //return a list of REC::Particle indices for tracks passing all gamma cuts
-    def gam_cut_result = (0..<event.npart).findAll{event.charge[it]==0}.collect{ ii -> [ii, gammaCutStrategies.collect{ gam_test -> gam_test(event,ii) } ] }.collectEntries()
+    def gam_cut_result = (0..<event.npart).findAll{event.charge[it]==0 && event.pid[it]==22}.collect{ ii -> [ii, gammaCutStrategies.collect{ gam_test -> gam_test(event,ii) } ] }.collectEntries()
     gammaCutResults = gam_cut_result.findResults{gam_indx, cut_result -> !cut_result.contains(false) ? gam_indx : null}
   }
 }
