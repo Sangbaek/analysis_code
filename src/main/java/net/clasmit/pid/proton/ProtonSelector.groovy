@@ -35,9 +35,9 @@ class ProtonSelector{
       proton_candidate.passProtonDCR1,
       proton_candidate.passProtonDCR2,
       proton_candidate.passProtonDCR3,
-      proton_candidate.passProtonTrackQuality,
-      proton_candidate.passProtonCDPolarAngleCut,
-      proton_candidate.passProtonVertexCut
+      // proton_candidate.passProtonTrackQuality,
+      // proton_candidate.passProtonCDPolarAngleCut,
+      // proton_candidate.passProtonVertexCut
     ]
 
     proton_candidate.setProtonCutParameters(field_setting)
