@@ -19,7 +19,7 @@ import net.clasmit.event.Event
 import net.clasmit.event.EventConverter
 
 
-def cli = new CliBuilder(usage: 'java -jar target/filter-1.1.jar net.clasmit.particle [-p] polarity [-s] start [-e] end file_names')
+def cli = new CliBuilder(usage: 'java -jar target/filter-1.2.jar net.clasmit.particle [--options] file_names')
 
 cli.with {
     h longOpt: 'help', 'Show usage information'

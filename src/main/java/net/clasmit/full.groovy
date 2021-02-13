@@ -19,13 +19,15 @@ import net.clasmit.event.Event
 import net.clasmit.event.EventConverter
 
 
-def cli = new CliBuilder(usage: 'java -jar target/filter-1.1.jar net.clasmit.full [-p] polarity [-s] start [-e] end file_names')
+def cli = new CliBuilder(usage: 'java -jar target/filter-1.2.jar net.clasmit.particle [--options] file_names')
 
 cli.with {
     h longOpt: 'help', 'Show usage information'
     p longOpt: 'polarity',        defaultValue:'inbending', args: 1, argName: 'polarity',        'inbending| outbending, default is inbending'
-    s longOpt: 'start', defaultValue: "0", args: 1, argName: 'starting event', 'starting event count, or percentage, ex) 1000, or 10%'
-    e longOpt: 'end', defaultValue: "-1", args: 1, argName: 'last event', 'last event count, or percentage, ex) 2000, or 20%'
+    s longOpt: 'start', defaultValue: "0", args: 1, argName: 'starting event', 'starting event count, or percentage, ex) 1000, or 10%%'
+    e longOpt: 'end', defaultValue: "-1", args: 1, argName: 'last event', 'last event count, or percentage, ex) 2000, or 20%%'
+    t longOpt: 'twophotons', type: boolean, argName: 'requiringTwoPhotons', 'if on, requiring photons'
+    eb longOpt: 'eb', type: boolean, argName: 'EB only', 'if on, use eb pid only'
 }
 
 def options = cli.parse(args)
@@ -41,6 +43,9 @@ def polarity = options.p
 
 def start, end
 def start_mode, end_mode
+
+def requirePi0 = options.t
+def useEB = options["eb"]
 
 if (options.s=="0"){
   start = "0"
@@ -124,7 +129,7 @@ fnames.each{fname->
   if (end == "-1" || end == "100%") end = totalEvent
   else if (end_mode =="percentage") end = Math.round(Float.valueOf(end[0..-2])*totalEvent/100)
   
-  println("Requested from events "+start+ " to " + end + ", including start, excluding end")
+  println("Requested from events "+start+ " to " + end)
 
   SchemaFactory schema = reader.getSchemaFactory();
   schema.addSchema(customSchema)
@@ -159,7 +164,7 @@ fnames.each{fname->
     if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("REC::Particle"))) continue
     def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
     def event = EventConverter.convert(data_event)
-    def partDict = processor.filterEPGs(event)// get columns of REC::Particle to be saved
+    def partDict = processor.filterEPGs(event, requirePi0, useEB)// get columns of REC::Particle to be saved
     def partList = partDict["pinds"]// get columns of REC::Particle to be saved
 
     //saves only such columns
