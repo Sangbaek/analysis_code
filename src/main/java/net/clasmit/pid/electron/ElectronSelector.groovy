@@ -20,7 +20,7 @@ public class ElectronSelector{
   }
 
   public ElectronSelector(polarity){
-    field_setting = "outbending"
+    field_setting = polarity
     initalizeCustomElecCuts()
   }
 
