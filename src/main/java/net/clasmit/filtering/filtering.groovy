@@ -84,9 +84,11 @@ class filtering{
       }
 
       def filterCondition
+      def epCondition = electron_candidates&&proton_candidates
       def epgCondition = electron_candidates&&proton_candidates&&gamma_candidates
       def epggCondition = epgCondition && gamma_candidates.size()>1
-      if (requirePi0) filterCondition = epggCondition
+      if (event.mc_status) filterCondition = epCondition
+      else if (requirePi0) filterCondition = epggCondition
       else filterCondition = epgCondition
       if (filterCondition){
 

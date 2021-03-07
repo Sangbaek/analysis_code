@@ -132,6 +132,7 @@ fnames.each{fname->
 
   SchemaFactory schema = reader.getSchemaFactory();
   SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
+  if (schema.hasSchema("MC::Particle")) writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event", "MC::Particle"]);
   // // defining schema with REC::Scintillator
   // SchemaFactory writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "RUN::config", "REC::Event"]);
   writerFactory.addSchema(customSchema)

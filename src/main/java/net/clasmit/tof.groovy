@@ -135,6 +135,7 @@ fnames.each{fname->
   // SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
   // defining schema with REC::Scintillator
   SchemaFactory writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "RUN::config", "REC::Event"]);
+  if (schema.hasSchema("MC::Particle")) writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "RUN::config", "REC::Event", "MC::Particle"]);
   writerFactory.addSchema(customSchema)
   def writer = new HipoWriter(writerFactory)
 
