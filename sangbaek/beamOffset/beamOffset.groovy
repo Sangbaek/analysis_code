@@ -10,9 +10,9 @@ import org.jlab.clas.physics.Particle
 
 class beamOffset {
 	def hists = new ConcurrentHashMap()
-    def vxvy = new H2F("/trig/vxvy $it", "vy vs vx runrange $it", 100, -0.1, 0.1, 100, -0.1, 0.1)
-    def vzphi_dc = new H2F("/trig/vzphi_dc$it", "vz vs phi(dc) runrange $it", 100, -180, 180, 100, -20, 20)
-    def vzphi = new H2F("/trig/vzphi$it", "vy vs vy runrange $it", 100, -180, 180, 100, -20, 20)
+    def vxvy = {new H2F("/trig/vxvy $it", "vy vs vx runrange $it", 100, -0.1, 0.1, 100, -0.1, 0.1)}
+    def vzphi_dc = {new H2F("/trig/vzphi_dc$it", "vz vs phi(dc) runrange $it", 100, -180, 180, 100, -20, 20)}
+    def vzphi = {new H2F("/trig/vzphi$it", "vy vs vy runrange $it", 100, -180, 180, 100, -20, 20)}
 
 	def processEvent(event) {
 
