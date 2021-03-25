@@ -10,7 +10,7 @@ import org.jlab.clas.physics.Particle
 
 class beamOffset {
 	def hists = new ConcurrentHashMap()
-    def vxvy = {new H2F("$it", "$it", 100, -0.1, 0.1, 100, -0.1, 0.1)}
+    def vxvy = {new H2F("$it", "$it", 100, -0.2, 0.2, 100, -0.2, 0.2)}
     def vzphi_dc = {new H2F("$it", "$it", 100, -180, 180, 100, -20, 20)}
     def vzphi = {new H2F("$it", "$it", 100, -180, 180, 100, -20, 20)}
 
@@ -22,8 +22,8 @@ class beamOffset {
 
             runNumber = event.run_number
             if (runNumber<5278) runRange = 1
-            else if (runNumber>5419) runRange = 2
-            else runRange = 3
+            else if (runNumber>5419) runRange = 3
+            else runRange = 2
 
             // electron
             if (event.pid[index]==11 && event.status[index] < 0){
