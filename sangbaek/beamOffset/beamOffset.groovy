@@ -1,4 +1,4 @@
-package sangbaek.beamPosition
+package sangbaek.beamOffset
 import org.jlab.clas.physics.Vector3
 import org.jlab.groot.data.H2F
 import org.jlab.groot.data.H1F
@@ -8,7 +8,7 @@ import org.jlab.clas.physics.Particle
 // import pid.proton.ProtonFromEvent
 // import pid.gamma.GammaFromEvent
 
-class beamPosition {
+class beamOffset {
 	def hists = new ConcurrentHashMap()
     def vxvy = new H2F("/trig/vxvy $it", "vy vs vx runrange $it", 100, -0.1, 0.1, 100, -0.1, 0.1)
     def vzphi_dc = new H2F("/trig/vzphi_dc$it", "vz vs phi(dc) runrange $it", 100, -180, 180, 100, -20, 20)
