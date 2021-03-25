@@ -10,16 +10,17 @@ import org.jlab.clas.physics.Particle
 
 class beamOffset {
 	def hists = new ConcurrentHashMap()
-    def vxvy = {new H2F("/trig/vxvy $it", "vy vs vx runrange $it", 100, -0.1, 0.1, 100, -0.1, 0.1)}
-    def vzphi_dc = {new H2F("/trig/vzphi_dc$it", "vz vs phi(dc) runrange $it", 100, -180, 180, 100, -20, 20)}
-    def vzphi = {new H2F("/trig/vzphi$it", "vy vs vy runrange $it", 100, -180, 180, 100, -20, 20)}
+    def vxvy = {new H2F("$it", "$it", 100, -0.1, 0.1, 100, -0.1, 0.1)}
+    def vzphi_dc = {new H2F("$it", "$it", 100, -180, 180, 100, -20, 20)}
+    def vzphi = {new H2F("$it", "$it", 100, -180, 180, 100, -20, 20)}
 
+    def runNumber, runRange, vx, vy, vz, ele, hits, phi
 	def processEvent(event) {
 
 
 		(0..<event.npart).each{ index ->
 
-            runNumber = run_number
+            runNumber = event.run_number
             if (runNumber<5278) runRange = 1
             else if (runNumber>5419) runRange = 2
             else runRange = 3
@@ -27,16 +28,16 @@ class beamOffset {
             // electron
             if (event.pid[index]==11 && event.status[index] < 0){
 
-                vx = event.vx[pindex]
-                vy = event.vy[pindex]
-                vz = event.vz[pindex]
-                ele = new Particle(11, event.px[pindex], event.py[pindex], event.pz[pindex])
+                vx = event.vx[index]
+                vy = event.vy[index]
+                vz = event.vz[index]
+                ele = new Particle(11, event.px[index], event.py[index], event.pz[index])
                 if (event.dc1_status.contains(index)){
                     hits = event.dc1.get(index)
                     if (hits){
                         hits.each{
-                            phi =  Math.toDegrees(Math.atan2(it.get(1), it.get(0)))
-                            hists.computeIfAbsent(runRange, vzphi_dc).fill(phi, vz)
+                            phi =  Math.toDegrees(Math.atan2(it.y, it.x))
+                            hists.computeIfAbsent("/trig/vzphi_dc1_run"+runRange, vzphi_dc).fill(phi, vz)
                         }
                     }
                 }   
@@ -44,8 +45,8 @@ class beamOffset {
                     hits = event.dc2.get(index)
                     if (hits){
                         hits.each{
-                            phi =  Math.toDegrees(Math.atan2(it.get(1), it.get(0)))
-                            hists.computeIfAbsent(runRange, vzphi_dc).fill(phi, vz)
+                            phi =  Math.toDegrees(Math.atan2(it.y, it.x))
+                            hists.computeIfAbsent("/trig/vzphi_dc2_run"+runRange, vzphi_dc).fill(phi, vz)
                         }
                     }
                 }   
@@ -53,13 +54,13 @@ class beamOffset {
                     hits = event.dc3.get(index)
                     if (hits){
                         hits.each{
-                            phi =  Math.toDegrees(Math.atan2(it.get(1), it.get(0)))
-                            hists.computeIfAbsent(runRange, vzphi_dc).fill(phi, vz)
+                            phi =  Math.toDegrees(Math.atan2(it.y, it.x))
+                            hists.computeIfAbsent("/trig/vzphi_dc3_run"+runRange, vzphi_dc).fill(phi, vz)
                         }
                     }
                 }   
-                hists.computeIfAbsent(runRange, vzphi).fill(Math.toDegrees(ele.phi()), vz)
-                hists.computeIfAbsent(runRange, vxvy).fill(vx, vy)
+                hists.computeIfAbsent("/trig/vzphi_run"+runRange, vzphi).fill(Math.toDegrees(ele.phi()), vz)
+                hists.computeIfAbsent("/trig/vxvy_run"+runRange, vxvy).fill(vx, vy)
             }
         }
 	}
