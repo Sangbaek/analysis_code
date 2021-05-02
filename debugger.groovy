@@ -39,7 +39,7 @@ args.each{filename ->
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("MC::Particle"))) continue
       def data_event = new HipoDataEvent(jnp_event, reader.getSchemaFactory())
       def event = EventConverter.convert(data_event)
-      if (event.mc_pz <-0.4696 && event.mc_pz > -0.4698){
+      if (event.mc_px[0] <-0.4696 && event.mc_px[0] > -0.4698){
         Bank  MCparticles = new Bank(schema.getSchema("MC::Particle"));
         Bank  RunConfigs = new Bank(schema.getSchema("RUN::config"));
         println(filename)
