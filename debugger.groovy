@@ -43,7 +43,7 @@ args.each{filename ->
         Bank  MCparticles = new Bank(schema.getSchema("MC::Particle"));
         Bank  RunConfigs = new Bank(schema.getSchema("RUN::config"));
         println(filename)
-        MCParticles.show();
+        MCparticles.show();
         RunConfigs.show();
       }
     }
