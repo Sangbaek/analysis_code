@@ -22,10 +22,10 @@ import event.Event
 import event.EventConverter
 
 
-HipoReader reader = new HipoReader();
 
 args.each{filename ->
 
+    HipoReader reader = new HipoReader();
     reader.open(filename);
 
     def jnp_event = new org.jlab.jnp.hipo4.data.Event()
@@ -33,7 +33,7 @@ args.each{filename ->
 
     // dataSelector.add("sqrt(px*px+py*py+pz*pz)>2.0");
 
-    while(reader.hasNext()==true && evcount<5){
+    while(reader.hasNext()==true){
 
       reader.nextEvent(jnp_event);
       if(!jnp_event.hasBank(reader.getSchemaFactory().getSchema("MC::Particle"))) continue
@@ -46,7 +46,5 @@ args.each{filename ->
         MCParticles.show();
         RunConfigs.show();
       }
-
     }
-
 }
