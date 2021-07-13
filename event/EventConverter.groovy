@@ -18,6 +18,7 @@ class EventConverter {
         convertTimeOfFlight(dataEvent,event)
         convertDriftChamber(dataEvent,event)
         convertMC(dataEvent,event)
+        convertFilter(dataEvent,event)
         return event
     }
 
@@ -316,5 +317,15 @@ class EventConverter {
             event.mc_status = false
             event.mc_npart = 0
         }
+    }
+
+    static def convertFilter(HipoDataEvent dataEvent, Event event){
+        if (dataEvent.hasBank("FILTER::Index")){
+            def filter = dataEvent.getBank("FILTER::Index")
+
+            (0 ..< filter.rows()).each{ index ->
+                event.before.put(index, filter.getInt('before', index))
+            }
+        } 
     }
 }

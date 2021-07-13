@@ -59,6 +59,9 @@ class Event {
     HashMap<Integer, Short> mc_pid
     HashMap<Integer, Float> mc_px, mc_py, mc_pz, mc_p, mc_vx, mc_vy, mc_vz, mc_vt
 
+    // FILTER::Index
+    HashMap<Integer, Short> before
+
     def Event(){
         cherenkov_status = new HashSet<Integer>()
         ecal_inner_status = new HashSet<Integer>()
@@ -157,6 +160,9 @@ class Event {
         mc_vy = new HashMap<Integer, Float>()
         mc_vz = new HashMap<Integer, Float>()
         mc_vt = new HashMap<Integer, Float>()
+
+        //FILTER::Index
+        before = new HashMap<Integer, Integer>()
     }
 }
 
