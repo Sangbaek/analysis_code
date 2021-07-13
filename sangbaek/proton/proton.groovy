@@ -43,7 +43,7 @@ class proton{
             hit_ftof2 = event.tof.get(pindex).find{ hit -> hit.layer == 3}
 
             if (hit_ftof2){
-              if (pro_problem) hists.computeIfAbsent("/pro/dp_p_1", h_dp_p).fill(event.p[ind1],event.mc_p[1]-event.p[ind1])
+              if (pro_problem(event.p[ind1], event.mc_p[1])) hists.computeIfAbsent("/pro/dp_p_1", h_dp_p).fill(event.p[ind1],event.mc_p[1]-event.p[ind1])
               else hists.computeIfAbsent("/pro/dp_p_2", h_dp_p).fill(event.p[ind1],event.mc_p[1]-event.p[ind1])
             }
           }          
