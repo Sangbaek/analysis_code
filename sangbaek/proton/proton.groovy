@@ -38,9 +38,9 @@ class proton{
           def ftof_exists = event.tof_status.contains(pindex)
           def ctof_exists = event.ctof_status.contains(pindex)
           if (ftof_exists){
-            hit_ftof1a = event.tof.get(index).find{ hit -> hit.layer == 1}
-            hit_ftof1b = event.tof.get(index).find{ hit -> hit.layer == 2}
-            hit_ftof2 = event.tof.get(index).find{ hit -> hit.layer == 3}
+            hit_ftof1a = event.tof.get(pindex).find{ hit -> hit.layer == 1}
+            hit_ftof1b = event.tof.get(pindex).find{ hit -> hit.layer == 2}
+            hit_ftof2 = event.tof.get(pindex).find{ hit -> hit.layer == 3}
 
             if (hit_ftof2){
               if (pro_problem) hists.computeIfAbsent("/pro/dp_p_1", h_dp_p).fill(event.p[ind1],event.mc_p[ind1]-event.p[ind1])
