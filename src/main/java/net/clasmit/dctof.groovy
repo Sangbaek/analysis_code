@@ -134,8 +134,8 @@ fnames.each{fname->
   SchemaFactory schema = reader.getSchemaFactory();
   // SchemaFactory writerFactory = schema.reduce(["REC::Particle", "RUN::config", "REC::Event"]);
   // defining schema with REC::Scintillator
-  SchemaFactory writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "RUN::config", "REC::Event"]);
-  if (schema.hasSchema("MC::Particle")) writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "RUN::config", "REC::Event", "MC::Particle"]);
+  SchemaFactory writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "REC::Traj", "RUN::config", "REC::Event"]);
+  if (schema.hasSchema("MC::Particle")) writerFactory = schema.reduce(["REC::Particle", "REC::Scintillator", "REC::Traj", "RUN::config", "REC::Event", "MC::Particle"]);
   writerFactory.addSchema(customSchema)
   def writer = new HipoWriter(writerFactory)
 
@@ -146,8 +146,13 @@ fnames.each{fname->
   // defining iterator and selector for filtering REC::Scintillator
   BankIterator           iterScin = new BankIterator(4096);
   BankSelector   dataSelectorScin = new BankSelector(schema.getSchema("REC::Scintillator"));
+  // defining iterator and selector for filtering REC::Traj
+  BankIterator           iterTraj = new BankIterator(4096);
+  BankSelector   dataSelectorTraj = new BankSelector(schema.getSchema("REC::Traj"));
 
   def jnp_event = new org.jlab.jnp.hipo4.data.Event()
+
+  def pid
 
   while(evcount<totalEvent) {
 
@@ -170,6 +175,7 @@ fnames.each{fname->
     def event = EventConverter.convert(data_event)
     def partDict = processor.filterEPGs(event, requirePi0, useEB)// get columns of REC::Particle to be saved
     def partList = partDict["pinds"]// get columns of REC::Particle to be saved
+    def pidList = partDict["pids"]
 
     //saves only such columns
     if (partList) {
@@ -182,6 +188,10 @@ fnames.each{fname->
       // preparing for REC::Scintillator
       dataSelectorScin.getIterator(jnp_event, iterScin);
       iterScin.reset()
+
+      // preparing for REC::Traj
+      dataSelectorTraj.getIterator(jnp_event, iterTraj);
+      iterTraj.reset()
       
       // preparing for FILTER::Index
       def customBank = new Bank(customSchema, partList.size)
@@ -208,21 +218,44 @@ fnames.each{fname->
       if (recScinBank.getRows()>0){
         (0..<recScinBank.getRows()).each{
           def pindex = recScinBank.getInt("pindex", it)
-          if (partList.contains(pindex)) iterScin.addIndex(it)
+          if (partList.contains(pindex)){
+            pid = pidList[partList.indexOf(pindex)]
+            if (pid == 2212) iterScin.addIndex(it)
+          }
         }
       }
+
+      //filtering REC::Traj
+      Bank recTrajBank = dataSelectorTraj.getBank()
+      if (recTrajBank.getRows()>0){
+        (0..<recTrajBank.getRows()).each{
+          def pindex = recTrajBank.getInt("pindex", it)
+          if (partList.contains(pindex)){
+            pid = pidList[partList.indexOf(pindex)]
+            if (pid == 2212) iterTraj.addIndex(it)
+          }
+        }
+      }
+
 
       //saving filtered REC::Particle
       Bank newPartBank = BankSelector.reduceBank(dataSelectorPart.getBank(), iterPart);
       jnp_event.remove(dataSelectorPart.getBank().getSchema());
       jnp_event.write(newPartBank); // REC::Particle only passed filtering.filterEPGs
 
-      jnp_event.write(customBank)//saving FILTER::Index bank
+      //saving FILTER::Index bank
+      jnp_event.write(customBank)
 
       //saving filtered REC::Scintillator
-      Bank newScinScin = BankSelector.reduceBank(recScinBank, iterScin);
+      Bank newScinBank = BankSelector.reduceBank(recScinBank, iterScin);
       jnp_event.remove(dataSelectorScin.getBank().getSchema());
-      jnp_event.write(newScinScin);
+      jnp_event.write(newScinBank);
+
+      //saving filtered REC::Traj
+      Bank newTrajBank = BankSelector.reduceBank(recTrajBank, iterTraj);
+      jnp_event.remove(dataSelectorTraj.getBank().getSchema());
+      jnp_event.write(newTrajBank);
+
       writer.addEvent(jnp_event)
     }
   }

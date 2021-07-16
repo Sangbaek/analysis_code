@@ -12,19 +12,19 @@ import net.clasmit.pid.proton.ProtonSelector
 import net.clasmit.pid.gamma.GammaSelector
 import org.jlab.clas.pdg.PDGDatabase
 
-class filtering{
+class filteringEGG{
 
   def polarity = "inbending"
   def electron_selector
   def proton_selector
   def gamma_selector = new GammaSelector()
 
-  def filtering(){
+  def filteringEGG(){
     electron_selector = new ElectronSelector()
     proton_selector = new ProtonSelector()
   }
 
-  def filtering(polar){
+  def filteringEGG(polar){
     polarity = polar
     electron_selector = new ElectronSelector(polarity)
     proton_selector = new ProtonSelector(polarity)
@@ -79,22 +79,21 @@ class filtering{
       }
       else{
         electron_candidates = electron_selector.applyCuts(event)
-        proton_candidates = proton_selector.applyCuts(event)
+        proton_candidates = (0..<event.npart).findAll{event.pid[it]==2212 && event.charge[it]>0}
         gamma_candidates = gamma_selector.applyCuts(event)
       }
 
       def filterCondition
-      // def epCondition = electron_candidates&&proton_candidates
+      def epCondition = electron_candidates&&proton_candidates
+      def eggCondition = electron_candidates && (gamma_candidates.size()>1)
       def epgCondition = electron_candidates&&proton_candidates&&gamma_candidates
-      def epggCondition = epgCondition && gamma_candidates.size()>1
-      // if (event.mc_status) filterCondition = epCondition
-      if (requirePi0) filterCondition = epggCondition
+      def epggCondition = epgCondition && (gamma_candidates.size()>1)
+      if (event.mc_status) filterCondition = epCondition
+      else if (requirePi0) filterCondition = epggCondition
       else filterCondition = epgCondition
-      if (filterCondition){
+      if (eggCondition){
 
         def pinds = [*electron_candidates, *proton_candidates, *gamma_candidates]
-
-        def pids = pinds.collect{index-> event.pid[index]}
 
         def pcal_sectors = pinds.collect{index->
           if (Math.abs(event.status[index])<2000 || Math.abs(event.status[index])>4000) event.status[index]
@@ -182,17 +181,17 @@ class filtering{
           else 0
         }
 
-        return [pinds:pinds, pids:pids, pcal_sectors:pcal_sectors, ecinner_sectors: ecinner_sectors,
+        return [pinds:pinds, pcal_sectors:pcal_sectors, ecinner_sectors: ecinner_sectors,
         ecouter_sectors: ecouter_sectors, dc_track_sectors:dc_track_sectors,
         dc1_traj_sectors: dc1_traj_sectors, dc2_traj_sectors: dc2_traj_sectors, dc3_traj_sectors: dc3_traj_sectors,
         ftof1a_sectors: ftof1a_sectors, ftof1b_sectors: ftof1b_sectors, ftof2_sectors: ftof2_sectors, htcc_sectors: htcc_sectors]
       }
-      else return  [pinds: null, pids: null, pcal_sectors: null, ecinner_sectors: null,
+      else return  [pinds: null, pcal_sectors: null, ecinner_sectors: null,
       ecouter_sectors: null, dc_track_sectors: null,
       dc1_traj_sectors: null, dc2_traj_sectors: null, dc3_traj_sectors: null,
       ftof1a_sectors: null, ftof1b_sectors: null, ftof2_sectors:null, htcc_sectors: null]
     }
-    return  [pinds: null, pids: null, pcal_sectors: null, ecinner_sectors: null,
+    return  [pinds: null, pcal_sectors: null, ecinner_sectors: null,
     ecouter_sectors: null, dc_track_sectors: null,
     dc1_traj_sectors: null, dc2_traj_sectors: null, dc3_traj_sectors: null,
     ftof1a_sectors: null, ftof1b_sectors: null, ftof2_sectors:null, htcc_sectors: null]
